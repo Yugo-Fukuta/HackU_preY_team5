@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    build: ./docker/mysql
+    tty: true
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root #コンテナ内のMySQLを起動する際のパスワードを設定
+      TZ: Asia/Tokyo
+    ports:
+      - '3306:3306'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    container_name: hacku_mysql
+    
+  # python3:
+  #   build: ./docker/python
+  #   ports:
+  #       - '80:80'
+  #   tty: true # コンテナの起動永続化
+  #   container_name: 'python3'
+    
