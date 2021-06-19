@@ -62,12 +62,12 @@ yarn serve
 
 ## ブラウザ上でbackendとfrontendの動作確認
 
-### backendのURL(Hello WorldのJSONが表示されたら成功)
+#### backendのURL(Hello WorldのJSONが表示されたら成功)
 ```
 http://localhost:5000
 ```
 
-### frontendのURL(Vueの初期ページが表示されたら成功)
+#### frontendのURL(Vueの初期ページが表示されたら成功)
 ```
 http://localhost:3000
 ```
