@@ -16,10 +16,30 @@ services:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
     container_name: hacku_mysql
     
-  # python3:
-  #   build: ./docker/python
-  #   ports:
-  #       - '80:80'
-  #   tty: true # コンテナの起動永続化
-  #   container_name: 'python3'
-    
+  backend:
+    build: ./docker/backend
+    tty: true # コンテナの起動永続化
+    volumes:
+      - "./backend:/usr/src/app/backend"
+    environment:
+      APP_ENV: "development"
+      TZ: Asia/Tokyo
+    ports:
+      - '5000:5000'
+    restart: always
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 5000
+    container_name: backend
+
+  frontend:
+    build: ./docker/frontend
+    tty: true
+    volumes:
+      - "./frontend:/usr/src/app/frontend"
+    environment:
+      APP_ENV: "development"
+      TZ: Asia/Tokyo
+    ports:
+      - "3000:3000"
+    restart: always
+    #command: yarn serve (この行の#マークと、この括弧のメッセージはVueインストール後に削除してください。)
+    container_name: frontend
