@@ -25,13 +25,13 @@ def get_oshido(db_session: Session, uid: str, celeb_name: str):
 router = APIRouter()
 
 # そのuidのデータ一覧
-@router.get("/show_odhido_list/{uid}")
+@router.get("/show_oshido_list/{uid}")
 def read_uid_data(uid: str, db: Session = Depends(get_db)):
     uid_data_list = get_uid_data(db, uid)
     return uid_data_list, 200
 
 # そのuidの、その有名人に対する推し度
-@router.get("/show_odhido/uid={uid}&celeb_name={celeb_name}")
+@router.get("/show_oshido/uid={uid}&celeb_name={celeb_name}")
 def read_oshido(uid: str, celeb_name: str, db: Session = Depends(get_db)):
     res = get_oshido(db, uid, celeb_name)
     return res, 200
