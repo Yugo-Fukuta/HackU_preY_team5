@@ -57,7 +57,7 @@ vue create .
 yarn serve
 ```
 
-#### Vue停止はCTRL+C。コンテナから出る時はexitと入力。
+#### Vue停止はCTRL+C。コンテナから出る時はexitと入力。コンテナ停止はdocker-compose stop
 
 
 ## ブラウザ上でbackendとfrontendの動作確認

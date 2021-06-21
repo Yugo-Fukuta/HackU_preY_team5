@@ -5,5 +5,8 @@ SQLAlchemy
 uvicorn
 sqlalchemy-utils
 mysqlclient
+pymysql
+cryptography
 oauth2client
 google-api-python-client
+twitter
