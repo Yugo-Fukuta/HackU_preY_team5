@@ -16,7 +16,6 @@
 </template>
 
 <script>
-// import axios from 'axios'
 export default {
     el: '#app',
     data() {
@@ -26,14 +25,6 @@ export default {
     },
     methods: {
         sendName: function() {
-            // axios.get('https://jsonplaceholder.typicode.com/users')
-            // .then(response => {
-            //     console.log(response)
-            //     this.$router.push('Celebs')
-            // })
-            // .catch(error => {
-            //     console.log(error)
-            // })
             this.$router.push({
                 name: 'Celebs',
                 params: {
