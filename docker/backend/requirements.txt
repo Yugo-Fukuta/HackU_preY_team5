@@ -7,3 +7,4 @@ sqlalchemy-utils
 mysqlclient
 pymysql
 cryptography
+detabases

@@ -1,5 +1,23 @@
 # Team5_AliceとBob
 
+## RestAPIを試す
+#### ※コマンドは全てbackendコンテナの/usr/src/app/backend で行う
+#### 1.backendディレクトリでマイグレーション実行
+```
+alembic upgrade head
+```
+
+#### ※1.でエラーが出る場合、migrationフォルダを削除して以下コマンドを実行してから1.を実行
+```
+alembic revision --autogenerate -m 'create oshido'
+```
+
+#### 2.以下のページでRestAPIを試せる
+```
+http://localhost:5000/docs
+```
+
+
 ## Docker環境構築
 
 ### コンテナ作成について(参考記事)
