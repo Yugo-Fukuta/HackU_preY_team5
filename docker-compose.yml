@@ -15,6 +15,8 @@ services:
       - '3306:3306'
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
     container_name: hacku_mysql
+    networks:
+      - fastapi_network
     
   backend:
     build: ./docker/backend
@@ -29,6 +31,8 @@ services:
     restart: always
     command: uvicorn main:app --reload --host 0.0.0.0 --port 5000
     container_name: backend
+    networks:
+      - fastapi_network
 
   frontend:
     build: ./docker/frontend
@@ -43,3 +47,9 @@ services:
     restart: always
     #command: yarn serve (この行の#マークと、この括弧のメッセージはVueインストール後に削除してください。)
     container_name: frontend
+    networks:
+      - fastapi_network
+    
+networks:
+  fastapi_network:
+    driver: bridge
