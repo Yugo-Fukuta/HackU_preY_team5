@@ -7,4 +7,7 @@ sqlalchemy-utils
 mysqlclient
 pymysql
 cryptography
-detabases
+databases
+oauth2client
+google-api-python-client
+twitter
