@@ -2,9 +2,11 @@
 
 ## 立ち上げ方
 ```sh
-git clone git@github.com:Yugo-Fukuta/HackU_preY_team5.git | cd HackU_preY_team5/
+# 共通
+git clone git@github.com:Yugo-Fukuta/HackU_preY_team5.git
+cd HackU_preY_team5
 
-git checkout yf
+git checkout ys
 docker-compose up -d --build
 docker-compose exec frontend sh
 
