@@ -10,9 +10,7 @@ from oauth2client.tools import argparser
 
 class YouTube_Search_Instance:
     def __init__(self, MyAPIKey):
-        self.MyAPIKey = MyAPIKey
-        #DEVELOPER_KEY = "YOUR_YOUTUBE_API_KEY"
-        self.DEVELOPER_KEY = self.MyAPIKey
+        self.DEVELOPER_KEY = MyAPIKey
         self.YOUTUBE_API_SERVICE_NAME = "youtube"
         self.YOUTUBE_API_VERSION = "v3"
 

@@ -45,7 +45,7 @@ async def register_news_key(data: NewsSchema,  db: Session = Depends(get_db)):
         req = NewsModel(whose=data.whose, nankome=data.nankome, api_key=data.api_key)
         db.add(req)
         db.commit()
-        return 204
+        return 201
     else:
         return 303
 
