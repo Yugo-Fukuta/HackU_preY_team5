@@ -49,7 +49,7 @@ async def register_twitter_key(data: TwitterSchema,  db: Session = Depends(get_d
                 access_token=data.access_token, access_token_secret=data.access_token_secret)
         db.add(req)
         db.commit()
-        return 204
+        return 201
     else:
         return 303
 
