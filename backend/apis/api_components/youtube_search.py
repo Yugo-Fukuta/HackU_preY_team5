@@ -16,7 +16,7 @@ class YouTube_Search_Instance:
         self.YOUTUBE_API_SERVICE_NAME = "youtube"
         self.YOUTUBE_API_VERSION = "v3"
 
-    def youtube_search(self, q, maxResults):
+    def youtube_search(self, q, maxResults=10):
         youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
             developerKey=self.DEVELOPER_KEY)
 
