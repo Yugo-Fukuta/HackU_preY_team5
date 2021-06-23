@@ -23,6 +23,7 @@ services:
     tty: true # コンテナの起動永続化
     volumes:
       - "./backend:/usr/src/app/backend"
+      - "/usr/local/lib/python3.8/site-packages"
     environment:
       APP_ENV: "development"
       TZ: Asia/Tokyo
