@@ -50,6 +50,26 @@ class YouTube_Search_Instance:
         #print("Videos:\n", "\n".join(videos), "\n")
         return videos
 
+    def get_meta_data(self, videoIDs): # カンマ区切り文字列 videoIDsの例 vOczUoQigww,q4DKmdlUb6I,v0M0Kd5w_fY
+        youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
+            developerKey=self.DEVELOPER_KEY)
+
+        search_response = youtube.videos().list(
+                part="id,statistics,status",
+                id=videoIDs
+        ).execute()
+
+        items = search_response.get("items", [])
+        meta_data = []
+
+        for item in items:
+            data = dict()
+            data["videoId"] = item["id"]
+            data["statistics"] = item["statistics"]
+            meta_data.append(data)
+
+        return meta_data
+
     if __name__ == "__main__":
         argparser.add_argument("--q", help="Search term", default="Google")
         argparser.add_argument("--max-results", help="Max results", default=25)
