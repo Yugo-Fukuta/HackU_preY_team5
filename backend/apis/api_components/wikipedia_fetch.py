@@ -10,7 +10,7 @@ def wikipedia_fetch_prof(q, silent=True):
     # 日本人でも日本語版のinfoboxが（なぜか）取れない人がいるので
     for l in langs:
         try:
-            so = wptools.page(q, lang=l, boxterm="", silent=silent).get_parse()
+            so = wptools.page(q, lang=l, boxterm="Infobox", silent=silent).get_parse()
         except LookupError as e:
             continue
 
