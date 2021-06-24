@@ -12,7 +12,8 @@ docker-compose exec frontend sh
 
 # コンテナ内
 # vue create .　これを実行するとsrc以下のファイルが書き換えられる
-yarn serve # 実行出来ない場合はyarnをまず実行する
+yarn
+yarn serve
 ```
 
 ## Project setup
