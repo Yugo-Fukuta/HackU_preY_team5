@@ -41,13 +41,11 @@ def get_youtube_key_list(whose: str, db: Session = Depends(get_db)):
 # APIキーを登録
 @router.post("/register_youtube_key/")
 async def register_youtube_key(data: YouTubeSchema,  db: Session = Depends(get_db)):
-    if read_youtube_row(db, data.whose, data.nankome) is None:
-        req = YouTubeModel(whose=data.whose, nankome=data.nankome, api_key=data.api_key)
-        db.add(req)
-        db.commit()
-        return 201
-    else:
-        return 303
+    req = YouTubeModel(whose=data.whose, nankome=data.nankome, api_key=data.api_key)
+    db.add(req)
+    db.commit()
+    res = read_youtube_row(db, data.whose, data.nankome)
+    return res, 201
 
 # APIキーを更新
 @router.put("/update_youtube_key/")

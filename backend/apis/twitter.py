@@ -44,14 +44,12 @@ def get_twitter_auth_list(whose: str, db: Session = Depends(get_db)):
 # APIキーを登録
 @router.post("/register_twitter_key/")
 async def register_twitter_key(data: TwitterSchema,  db: Session = Depends(get_db)):
-    if read_twitter_row(db, data.whose, data.nankome) is None:
-        req = TwitterModel(whose=data.whose, nankome=data.nankome, api_key=data.api_key, api_key_secret=data.api_key_secret, 
+    req = TwitterModel(whose=data.whose, nankome=data.nankome, api_key=data.api_key, api_key_secret=data.api_key_secret, 
                 access_token=data.access_token, access_token_secret=data.access_token_secret)
-        db.add(req)
-        db.commit()
-        return 201
-    else:
-        return 303
+    db.add(req)
+    db.commit()
+    res = read_twitter_row(db, data.whose, data.nankome)
+    return res, 201
 
 # APIキーを更新
 @router.put("/update_twitter_key/")

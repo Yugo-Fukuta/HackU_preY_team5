@@ -41,13 +41,11 @@ def get_news_key_list(whose: str, db: Session = Depends(get_db)):
 # APIキーを登録
 @router.post("/register_news_key/")
 async def register_news_key(data: NewsSchema,  db: Session = Depends(get_db)):
-    if read_news_row(db, data.whose, data.nankome) is None:
-        req = NewsModel(whose=data.whose, nankome=data.nankome, api_key=data.api_key)
-        db.add(req)
-        db.commit()
-        return 201
-    else:
-        return 303
+    req = NewsModel(whose=data.whose, nankome=data.nankome, api_key=data.api_key)
+    db.add(req)
+    db.commit()
+    res = read_news_row(db, data.whose, data.nankome)
+    return res, 201
 
 # APIキーを更新
 @router.put("/update_news_key/")
