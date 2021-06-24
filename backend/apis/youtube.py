@@ -32,6 +32,12 @@ def get_youtube_data(q: str, maxResults: int, db: Session = Depends(get_db)):
     res = YouTube_Search_Instance(read_youtube_key(db)).youtube_search(q, maxResults)
     return res, 200
 
+# 再生回数などのメタデータ取得
+@router.get("/get_youtube_meta_data/")
+def get_youtube_meta_data(videoIDs: str, db: Session = Depends(get_db)):
+    res = YouTube_Search_Instance(read_youtube_key(db)).get_meta_data(videoIDs)
+    return res, 200
+
 #その人のAPIキー一覧
 @router.get("/get_youtube_key_list/")
 def get_youtube_key_list(whose: str, db: Session = Depends(get_db)):

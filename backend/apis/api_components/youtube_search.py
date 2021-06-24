@@ -39,11 +39,36 @@ class YouTube_Search_Instance:
         # matching videos, channels, and playlists.
         for search_result in search_response.get("items", []):
             if search_result["id"]["kind"] == "youtube#video":
-                videos.append("title: %s, videoUrl: https://www.youtube.com/watch?v=%s thumbnailsUrl: %s" 
-                        % (search_result["snippet"]["title"], search_result["id"]["videoId"], search_result["snippet"]["thumbnails"]["high"]["url"]))
+                data = dict()
+                data["videoId"] = search_result["id"]["videoId"]
+                data["publishedAt"] = search_result["snippet"]["publishedAt"]
+                data["title"] = search_result["snippet"]["title"]
+                data["videoUrl"] = "https://www.youtube.com/watch?v=" + search_result["id"]["videoId"]
+                data["thumbnailsUrl"] = search_result["snippet"]["thumbnails"]["high"]["url"]
+                videos.append(data)
 
         #print("Videos:\n", "\n".join(videos), "\n")
         return videos
+
+    def get_meta_data(self, videoIDs): # カンマ区切り文字列 videoIDsの例 vOczUoQigww,q4DKmdlUb6I,v0M0Kd5w_fY
+        youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
+            developerKey=self.DEVELOPER_KEY)
+
+        search_response = youtube.videos().list(
+                part="id,statistics,status",
+                id=videoIDs
+        ).execute()
+
+        items = search_response.get("items", [])
+        meta_data = []
+
+        for item in items:
+            data = dict()
+            data["videoId"] = item["id"]
+            data["statistics"] = item["statistics"]
+            meta_data.append(data)
+
+        return meta_data
 
     if __name__ == "__main__":
         argparser.add_argument("--q", help="Search term", default="Google")
