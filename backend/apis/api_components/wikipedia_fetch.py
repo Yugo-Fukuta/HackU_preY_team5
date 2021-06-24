@@ -1,4 +1,5 @@
 import argparse
+import lxml.etree
 import wptools
 
 
@@ -9,19 +10,23 @@ def wikipedia_fetch_prof(q, silent=True):
     # 日本人でも日本語版のinfoboxが（なぜか）取れない人がいるので
     for l in langs:
         try:
-            so = wptools.page(q, lang=l, silent=silent).get_parse()
+            so = wptools.page(q, lang=l, boxterm="", silent=silent).get_parse()
         except LookupError as e:
             continue
 
         infobox = so.data["infobox"]
         if infobox:
-            break
+            return infobox
 
-    # infobox が取れなかったらとりあえず LookUpError を投げる
-    if infobox:
-        return infobox
-    else:
-        raise LookupError
+        # infobox が取れなかったらそれっぽいものを探す
+        for item in lxml.etree.fromstring(so.data["parsetree"]).xpath(f"//template/part/value[translate(normalize-space(text()),' ','')='{q}']/../.."):
+            box = wptools.utils.template_to_dict(item)
+            if box:
+                return box
+
+    # 最終的になんにもなかった場合は LookUpError を投げる
+    # ページがない or Box がない
+    raise LookupError
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
