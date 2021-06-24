@@ -2,9 +2,12 @@
     <div class="container">
         <div class="blank"></div>
         <div class="header">
-            <div class="search-icon-box"><img src="@/assets/search.png" class="search-icon"></div>
-            <input type="text" name="name" placeholder="a" v-model="name" class="input-form">
-            <img src="@/assets/like.png" class="like-button">
+            <div class="search-box">
+                <img src="@/assets/search.png" class="search-icon">
+                <!-- <input type="text" name="name" placeholder="a" v-model="name" class="input-form"> -->
+                <input @keydown.enter="trigger" v-model="newName" class="input-form">
+                <img src="@/assets/like.png" class="like-button">
+            </div>
         </div>
 
         <div v-for="(movie, index) in celebInfo" v-bind:key="movie.id.videoId">
@@ -34,6 +37,7 @@ export default {
     data() {
         return {
             name: this.$route.params.celebName,
+            newName: '',
             celebInfo: '',
             params: {
                 q: "", // 検索クエリを指定
@@ -64,21 +68,30 @@ export default {
             console.log(error)
         })
     },
+    // watch: {
+    //     '$route' (to) {
+    //         this.trigger(to.event)
+    //     }
+    // },
     methods: {
         toggleBtn: function(i) {
             this.isActive[i] = !this.isActive[i]
         },
-    }
+        trigger: function(event) {
+            if (event.keyCode != 13) return
+            this.name = this.newName
+            this.$router.push({
+                name: 'Celebs',
+                params: {
+                    celebName: this.name
+                }
+            })
+        }
+    },
 }
 </script>
 
 <style>
-.container {
-    width: 95%;
-    margin: 0 auto;
-    background: #FFFFFF;
-}
-
 .blank {
     height: 60px;
 }
@@ -96,9 +109,9 @@ export default {
     border-radius: 10px;
 }
 
-.search-icon-box {
+.search-box {
     position: absolute;
-    width: 15%;
+    width: 80%;
     z-index: 5;
     height: 37px;
     left: 10px;
@@ -112,31 +125,28 @@ export default {
     position: absolute;
     z-index: 6;
     height: 15px;
-    left: 8%;
+    left: 5px;
     top: 13px;
 }
 
 .input-form {
     position: absolute;
     z-index: 5;
-    height: 37px;
+    height: 30px;
     width: 70%;
-    left: 30px;
-    top: 10px;
+    left: 20px;
+    top: 0;
     background: #E5E5E5;
     border-radius: 5px;
 }
 
-input {
-    border: none;
-}
 
 .like-button {
     position: absolute;
     z-index: 5;
     height: 20px;
-    left: 87%;
-    top: 20px;
+    left: 105%;
+    top: 10px;
 }
 
 .ycontent {

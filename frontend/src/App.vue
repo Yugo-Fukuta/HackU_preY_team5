@@ -23,4 +23,14 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+.container {
+    width: 95%;
+    margin: 0 auto;
+    background: #FFFFFF;
+}
+
+input {
+    border: none;
+}
 </style>

@@ -1,16 +1,10 @@
 <template>
     <div class="container">
-        <h2>推し検索</h2>
-        <div id="app">
-            <div class="form-name">
-                <p>名前</p>
-                <!-- エラーメッセージを追加 -->
-                <p class="error-name">1文字以上入力してください</p>
-                <input type="text" name="name" placeholder="名前を入力してください" v-model="name">
-            </div>
+        <div class="form-name">
+            <input type="text" name="name" placeholder="名前を入力してください" v-model="name" class="input-form-top">
         </div>
         <div>
-            <button @click="sendName">送信する</button>
+            <button @click="sendName" class="osu-button">Osu</button>
         </div>
     </div>
 </template>
@@ -36,3 +30,20 @@ export default {
     },
 }
 </script>
+
+<style>
+.input-form-top {
+    position: absolute;
+    height: 37px;
+    width: 90%;
+    top: 30%;
+    left: 4%;
+    background: #E5E5E5;
+    border-radius: 5px;
+}
+
+.osu-button {
+    
+}
+
+</style>
