@@ -127,7 +127,7 @@ input {
 }
 
 .ycontent-sub {
-    margin-top: -205px;
+    margin-top: -210px;
     position: relative;
     z-index: 1;
 }
