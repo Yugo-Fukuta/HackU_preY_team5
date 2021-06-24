@@ -2,13 +2,11 @@
     <div class="container">
         <div class="blank"></div>
         <div class="header">
+            <div class="search-icon-box"><img src="@/assets/search.png" class="search-icon"></div>
             <input type="text" name="name" placeholder="a" v-model="name" class="input-form">
+            <img src="@/assets/like.png" class="like-button">
         </div>
-        <!-- <div class="ycontent">
-        </div>
-        <div @click="toggleBtn" v-bind:class="{active:active01}" class="ycontent ycontent-sub">
-            a
-        </div> -->
+
         <div v-for="(movie, index) in celebInfo" v-bind:key="movie.id.videoId">
                 <div class="ycontent">
                     <iframe width="330" height="185" class="y-movie" v-bind:src="movie.id.videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -18,6 +16,7 @@
                     <img src="@/assets/content-banner.png" class="content-banner">
                 </div>
         </div>
+
         <footer>
             <div class="foot-nav">
                 <div class="oshido-circle2"></div>
@@ -97,20 +96,47 @@ export default {
     border-radius: 10px;
 }
 
-.input-form {
-    position: relative;
+.search-icon-box {
+    position: absolute;
+    width: 15%;
     z-index: 5;
     height: 37px;
-    width: 75%;
-    margin-top: 8px;
-    left: -10%;
+    left: 10px;
+    top: 10px;;
+    background: #E5E5E5;
+    border-radius: 5px;
+    padding: 1px 2px;
+}
 
+.search-icon {
+    position: absolute;
+    z-index: 6;
+    height: 15px;
+    left: 8%;
+    top: 13px;
+}
+
+.input-form {
+    position: absolute;
+    z-index: 5;
+    height: 37px;
+    width: 70%;
+    left: 30px;
+    top: 10px;
     background: #E5E5E5;
     border-radius: 5px;
 }
 
 input {
     border: none;
+}
+
+.like-button {
+    position: absolute;
+    z-index: 5;
+    height: 20px;
+    left: 87%;
+    top: 20px;
 }
 
 .ycontent {
@@ -177,7 +203,6 @@ input {
 }
 
 .content-banner {
-    /* margin-top: -195px; */
     width: 100%;
     position: absolute;
     left: 0;
