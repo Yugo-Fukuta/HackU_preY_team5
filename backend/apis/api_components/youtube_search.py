@@ -19,7 +19,6 @@ class YouTube_Search_Instance:
     def youtube_search(self, q, maxResults=10):
         youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
             developerKey=self.DEVELOPER_KEY)
-        print(self.DEVELOPER_KEY)
 
         # Call the search.list method to retrieve results matching the specified
         # query term.
