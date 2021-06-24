@@ -39,8 +39,13 @@ class YouTube_Search_Instance:
         # matching videos, channels, and playlists.
         for search_result in search_response.get("items", []):
             if search_result["id"]["kind"] == "youtube#video":
-                videos.append("title: %s, videoUrl: https://www.youtube.com/watch?v=%s thumbnailsUrl: %s" 
-                        % (search_result["snippet"]["title"], search_result["id"]["videoId"], search_result["snippet"]["thumbnails"]["high"]["url"]))
+                data = dict()
+                data["videoId"] = search_result["id"]["videoId"]
+                data["publishedAt"] = search_result["snippet"]["publishedAt"]
+                data["title"] = search_result["snippet"]["title"]
+                data["videoUrl"] = "https://www.youtube.com/watch?v=" + search_result["id"]["videoId"]
+                data["thumbnailsUrl"] = search_result["snippet"]["thumbnails"]["high"]["url"]
+                videos.append(data)
 
         #print("Videos:\n", "\n".join(videos), "\n")
         return videos
