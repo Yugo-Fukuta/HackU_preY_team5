@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, UniqueConstraint
 from sqlalchemy_utils import UUIDType
 from uuid import uuid4
 from .mixins import TimestampMixin
@@ -12,5 +12,7 @@ class TwitterModel(Base, TimestampMixin):
     nankome = Column(Integer, nullable=False)
     api_key = Column(String(50), nullable=False)
     api_key_secret = Column(String(50), nullable=False)
-    access_token = Column(String(50), nullable=False)
-    access_token_secret = Column(String(50), nullable=False)
+    access_token = Column(String(50), unique=True, nullable=False)
+    access_token_secret = Column(String(50), unique=True, nullable=False)
+    __table_args__ = (UniqueConstraint(
+        'whose', 'nankome', name='unique_whose_nankome'),) 
