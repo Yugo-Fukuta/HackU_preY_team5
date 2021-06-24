@@ -1,7 +1,29 @@
 <template>
     <div class="container">
-        {{ name }}
-        {{ celebInfo }}
+        <div class="blank"></div>
+        <div class="header">
+            <input type="text" name="name" placeholder="a" v-model="name" class="input-form">
+        </div>
+        <!-- <div class="ycontent">
+        </div>
+        <div @click="toggleBtn" v-bind:class="{active:active01}" class="ycontent ycontent-sub">
+            a
+        </div> -->
+        <div v-for="(movie, index) in celebInfo" v-bind:key="movie.id.videoId">
+                <div class="ycontent">
+                    <iframe width="330" height="185" class="y-movie" v-bind:src="movie.id.videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <!-- <img height="185" v-bind:src="movie.snippet.thumbnails.medium.url" class="y-sumnail"> -->
+                </div>
+                <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="ycontent ycontent-sub">
+                    <img src="@/assets/content-banner.png" class="content-banner">
+                </div>
+        </div>
+        <footer>
+            <div class="foot-nav">
+                <div class="oshido-circle2"></div>
+                <img src="@/assets/oshido-circle.png" class="oshido-circle-img">
+            </div>
+        </footer>
     </div>
 </template>
 
@@ -20,7 +42,11 @@ export default {
                 type: "video",
                 maxResults: "5", // 最大検索数
                 key: process.env.VUE_APP_YOUTUBE_API_KEY
-            }
+            },
+            isActive: {
+                type: [Boolean],
+                default: false
+            },
         };
     },
     mounted() {
@@ -30,11 +56,138 @@ export default {
         })
         .then(response => {
             console.log(response)
-            this.celebInfo = response
+            this.celebInfo = response.data.items
+            this.celebInfo.forEach(element => {
+                element.id.videoId = "https://www.youtube.com/embed/" + element.id.videoId
+            });
         })
         .catch(error => {
             console.log(error)
         })
+    },
+    methods: {
+        toggleBtn: function(i) {
+            this.isActive[i] = !this.isActive[i]
+        },
     }
 }
 </script>
+
+<style>
+.container {
+    width: 95%;
+    margin: 0 auto;
+    background: #FFFFFF;
+}
+
+.blank {
+    height: 60px;
+}
+
+.header {
+    position: fixed;
+    z-index: 4;
+    left: 5%;
+    top: 5px;
+    width: 90%;
+    height: 56px;
+    margin-bottom: 14px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+
+.input-form {
+    position: relative;
+    z-index: 5;
+    height: 37px;
+    width: 75%;
+    margin-top: 8px;
+    left: -10%;
+
+    background: #E5E5E5;
+    border-radius: 5px;
+}
+
+input {
+    border: none;
+}
+
+.ycontent {
+    width: 341px;
+    height: 193px;
+    margin: 0 auto 20px auto;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+
+    transition: 0.5s;
+    position: relative;
+    z-index: 2;
+}
+
+.ycontent-sub {
+    margin-top: -205px;
+    position: relative;
+    z-index: 1;
+}
+
+.y-sumnail {
+    border-radius: 5px;
+    border: 3px solid #F4D153;
+}
+
+.y-movie {
+    border-radius: 5px;
+    border: 3px solid #F4D153;
+}
+
+.foot-nav {
+    position: fixed;
+    z-index: 4;
+    left: 5%;
+    top: 90%;
+    width: 90%;
+    height: 58px;
+
+    background: #FFFFFF;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 45px;
+}
+
+.oshido-circle-img {
+    position: fixed;
+    z-index: 5;
+    width: 64px;
+    height: 64px;
+    left: 41.5%;
+    top: 89.5%;
+}
+
+.oshido-circle2 {
+    position: fixed;
+    z-index: 4;
+    width: 67px;
+    height: 67px;
+    left: 41.23%;
+    top: 89%;
+
+    background: #FFFFFF;
+    border-radius: 45px;
+}
+
+.content-banner {
+    /* margin-top: -195px; */
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 94%;
+    z-index: 6;
+}
+
+.active {
+    transform: translateY(170px);
+    margin-bottom: 190px;
+}
+
+</style>
