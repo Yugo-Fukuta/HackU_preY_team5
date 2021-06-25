@@ -1,6 +1,10 @@
 /db/data/
+<<<<<<< HEAD
 /docker-compose.override.yml
 .DS_Store
 *.pyc
 *__pycache__/
 #/backend/seed/
+=======
+/docker-compose.override.yml
+>>>>>>> ba47084ee125f190f7cd86c00b6c3f9818509110
