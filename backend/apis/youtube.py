@@ -6,6 +6,7 @@ from database import get_db, SessionLocal
 from models.youtube import YouTubeModel
 from sqlalchemy.sql.expression import func, select
 from apis.api_components.youtube_search import YouTube_Search_Instance
+import random
 
 class YouTubeSchema(BaseModel):
     whose: str
@@ -20,9 +21,9 @@ def read_youtube_key_list(db_session: Session, whose: str):
 def read_youtube_row(db_session: Session, whose: str, nankome: int):
     return db_session.query(YouTubeModel).filter(YouTubeModel.whose == whose, YouTubeModel.nankome==nankome).first()
 
-#APIキーの取得(テーブルの１行目)
+#APIキーの取得(テーブル全体からランダム)
 def read_youtube_key(db_session: Session):
-    return db_session.query(YouTubeModel).first().api_key
+    return random.choice(db_session.query(YouTubeModel).all()).api_key
 
 router = APIRouter()
 
