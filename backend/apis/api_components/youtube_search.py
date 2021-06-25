@@ -69,6 +69,13 @@ class YouTube_Search_Instance:
             pbat = vid['snippet']['publishedAt']
             jst_time = parser.parse(pbat)
             jst_tz = timezone(timedelta(hours=+9))
+            likeCount = None
+            dislikeCount = None
+            try:
+                likeCount = int(vid['statistics']['likeCount'])
+                dislikeCount = int(vid['statistics']['dislikeCount'])
+            except:
+                pass
             videos.append({
             'title': vid['snippet']['title'],
             'id': vid['id'],
@@ -78,8 +85,8 @@ class YouTube_Search_Instance:
             'publishedAt': datetime.fromtimestamp(jst_time.timestamp(), jst_tz).strftime("%Y/%m/%d %H:%M"),
             'duration': durationHMS,
             'viewCount': int(vid['statistics']['viewCount']),
-            'likeCount': int(vid['statistics']['likeCount']),
-            'dislikeCount': int(vid['statistics']['dislikeCount']),
+            'likeCount': likeCount,
+            'dislikeCount': dislikeCount,
             })
         return videos
 
@@ -112,4 +119,3 @@ class YouTube_Search_Instance:
             youtube_search(args)
         except Exception as e:
             print(e)
-        
