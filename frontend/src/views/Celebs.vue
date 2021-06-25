@@ -6,10 +6,9 @@
                 <img src="@/assets/search.png" class="search-icon">
                 <!-- <input type="text" name="name" placeholder="a" v-model="name" class="input-form"> -->
                 <input @keydown.enter="trigger" v-model="newName" class="input-form">
-                <img src="@/assets/like.png" class="like-button">
+                <img @click="addOshi" src="@/assets/like.png" class="like-button">
             </div>
         </div>
-
         <div v-for="(movie, index) in celebInfo" v-bind:key="movie.id.videoId">
                 <div class="ycontent">
                     <iframe width="330" height="185" class="y-movie" v-bind:src="movie.id.videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -31,11 +30,13 @@
 
 <script>
 import axios from 'axios'
+import firebase from 'firebase'
 
 export default {
     el: '#app',
     data() {
         return {
+            uid: '',
             name: this.$route.params.celebName,
             newName: '',
             celebInfo: '',
@@ -86,6 +87,15 @@ export default {
                     celebName: this.name
                 }
             })
+        },
+        addOshi: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    this.uid = user.uid;
+                } else {
+                    this.$router.push('/signup')
+                }
+            });
         }
     },
 }
