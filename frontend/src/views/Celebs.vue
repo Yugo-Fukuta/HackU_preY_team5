@@ -5,8 +5,8 @@
             <div class="search-box">
                 <img src="@/assets/search.png" class="search-icon">
                 <input @keydown.enter="trigger" v-model="newName" class="input-form">
-                <img @click="addOshi" src="@/assets/like.png" class="like-button">
-                <!-- <img @click="deleteOshi" src="@/assets/like.png" class="like-button"> -->
+                <img v-if="isntOshi" @click="addOshi" src="@/assets/like.png" class="like-button">
+                <img v-else @click="deleteOshi" src="@/assets/heart.png" class="like-button">
             </div>
         </div>
         <div v-for="(movie, index) in celebInfo" v-bind:key="movie.videoUrl">
@@ -50,6 +50,8 @@ export default {
                 type: [Boolean],
                 default: false
             },
+            isntOshi: true,
+            oshido: 0
         };
     },
     mounted() {
@@ -70,6 +72,28 @@ export default {
         .catch(error => {
             console.log(error.response)
         })
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                axios.get("http://localhost:5000/get_oshido", {
+                    params: {
+                        uid: user.uid,
+                        celeb_name: this.params.q
+                    }
+                })
+                .then(response => {
+                    console.log(response)
+                    this.oshido = response.data[0].oshido
+                    if (this.oshido == null) {
+                        this.isntOshi = true
+                    } else {
+                        this.isntOshi = false
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            }
+        });
     },
     watch: {
         '$route' (to) {
@@ -100,7 +124,28 @@ export default {
                     })
                     .then(response => {
                         console.log(response)
-                        this.celebInfo = response.data.items
+                        this.isntOshi = false
+                    })
+                    .catch(error => {
+                        console.log(error.response.data)
+                    })
+                } else {
+                    this.$router.push('/signup')
+                }
+            });
+        },
+        deleteOshi: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.delete("http://localhost:5000/delete_oshido", {
+                        params: {
+                            uid: user.uid,
+                            celeb_name: this.params.q,
+                        }
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.isntOshi = true
                     })
                     .catch(error => {
                         console.log(error.response.data)
