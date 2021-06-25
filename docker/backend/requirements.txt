@@ -5,3 +5,12 @@ SQLAlchemy
 uvicorn
 sqlalchemy-utils
 mysqlclient
+pymysql
+cryptography
+databases
+oauth2client
+google-api-python-client
+twitter
+isodate
+python-dateutil
+wptools
