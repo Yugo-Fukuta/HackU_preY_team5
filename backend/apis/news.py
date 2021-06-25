@@ -6,6 +6,7 @@ from database import get_db, SessionLocal
 from models.news import NewsModel
 from sqlalchemy.sql.expression import func, select
 from apis.api_components.news_search import News_Search_Instance
+import random
 
 class NewsSchema(BaseModel):
     whose: str
@@ -20,9 +21,9 @@ def read_news_key_list(db_session: Session, whose: str):
 def read_news_row(db_session: Session, whose: str, nankome: int):
     return db_session.query(NewsModel).filter(NewsModel.whose == whose, NewsModel.nankome==nankome).first()
 
-#APIキーの取得(テーブルの１行目)
+#APIキーの取得(テーブル全体からランダム)
 def read_news_key(db_session: Session):
-    return db_session.query(NewsModel).first().api_key
+    return random.choice(db_session.query(NewsModel).all()).api_key
 
 router = APIRouter()
 
