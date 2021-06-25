@@ -46,7 +46,7 @@ docker-compose ps
 docker-compose exec frontend sh
 ```
 
-```
+
 #### Vueサーバーを起動
 ```
 yarn serve
