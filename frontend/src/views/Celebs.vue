@@ -6,6 +6,7 @@
                 <img src="@/assets/search.png" class="search-icon">
                 <input @keydown.enter="trigger" v-model="newName" class="input-form">
                 <img @click="addOshi" src="@/assets/like.png" class="like-button">
+                <!-- <img @click="deleteOshi" src="@/assets/like.png" class="like-button"> -->
             </div>
         </div>
         <div v-for="(movie, index) in celebInfo" v-bind:key="movie.videoUrl">
