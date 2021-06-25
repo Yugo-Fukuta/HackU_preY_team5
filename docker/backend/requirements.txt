@@ -11,3 +11,4 @@ databases
 oauth2client
 google-api-python-client
 twitter
+wptools
