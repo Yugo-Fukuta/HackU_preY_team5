@@ -21,7 +21,7 @@ def read_youtube_key_list(db_session: Session, whose: str):
 def read_youtube_row(db_session: Session, whose: str, nankome: int):
     return db_session.query(YouTubeModel).filter(YouTubeModel.whose == whose, YouTubeModel.nankome==nankome).first()
 
-#APIキーの取得(テーブルの１行目)
+#APIキーの取得(テーブル全体からランダム)
 def read_youtube_key(db_session: Session):
     return random.choice(db_session.query(YouTubeModel).all()).api_key
 
