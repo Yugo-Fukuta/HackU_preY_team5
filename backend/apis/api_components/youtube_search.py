@@ -1,7 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from dateutil import parser
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
+import isodate
 
 # Set DEVELOPER_KEY to the API key value from the APIs & auth > Registered apps
 # tab of
@@ -34,20 +36,51 @@ class YouTube_Search_Instance:
         ).execute()
 
         videos = []
+        ids = []
 
         # Add each result to the appropriate list, and then display the lists of
         # matching videos, channels, and playlists.
         for search_result in search_response.get("items", []):
             if search_result["id"]["kind"] == "youtube#video":
-                data = dict()
+                '''data = dict()
                 data["videoId"] = search_result["id"]["videoId"]
                 data["publishedAt"] = search_result["snippet"]["publishedAt"]
                 data["title"] = search_result["snippet"]["title"]
                 data["videoUrl"] = "https://www.youtube.com/watch?v=" + search_result["id"]["videoId"]
                 data["thumbnailsUrl"] = search_result["snippet"]["thumbnails"]["high"]["url"]
-                videos.append(data)
+                videos.append(data)'''
+                ids.append(search_result["id"]["videoId"])
 
-        #print("Videos:\n", "\n".join(videos), "\n")
+        res = youtube.videos().list(
+        part='snippet,contentDetails,statistics',
+        id=','.join(ids) # カンマ区切りで複数のidを一度に渡せます
+        ).execute()
+
+        for vid in res["items"]:
+            duration1 = isodate.parse_duration(vid['contentDetails']['duration'])
+            duration = int(duration1.total_seconds())
+            hour = duration // 3600
+            min = (duration-3600*hour) // 60
+            sec = duration % 60
+            if hour > 0:
+                durationHMS = '%i:%i:%i' % (hour, min, sec)
+            else:
+                durationHMS = '%i:%i' % (min, sec)
+            pbat = vid['snippet']['publishedAt']
+            jst_time = parser.parse(pbat)
+            jst_tz = timezone(timedelta(hours=+9))
+            videos.append({
+            'title': vid['snippet']['title'],
+            'id': vid['id'],
+            'videoUrl': 'https://www.youtube.com/watch?v=%s' % vid['id'],
+            'thumbnailsUrl': vid["snippet"]["thumbnails"]["high"]["url"],
+            'description': vid['snippet']['description'],
+            'publishedAt': datetime.fromtimestamp(jst_time.timestamp(), jst_tz).strftime("%Y/%m/%d %H:%M"),
+            'duration': durationHMS,
+            'viewCount': int(vid['statistics']['viewCount']),
+            'likeCount': int(vid['statistics']['likeCount']),
+            'dislikeCount': int(vid['statistics']['dislikeCount']),
+            })
         return videos
 
     def get_meta_data(self, videoIDs): # カンマ区切り文字列 videoIDsの例 vOczUoQigww,q4DKmdlUb6I,v0M0Kd5w_fY
@@ -79,3 +112,4 @@ class YouTube_Search_Instance:
             youtube_search(args)
         except Exception as e:
             print(e)
+        
