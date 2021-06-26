@@ -46,36 +46,20 @@ docker-compose ps
 docker-compose exec frontend sh
 ```
 
-#### Vueアプリの作成
-```
-vue create .
-```
+<<<<<<< HEAD
+=======
 
-#### 質問に答える1 (Yを入力)
-```
-? Generate project in current directory? (Y/n) Y
-```
-
-#### 質問に答える2 (Vue 3を選択)
-```
-? Please pick a preset: 
-  Default ([Vue 2] babel, eslint) 
-❯ Default (Vue 3) ([Vue 3] babel, eslint) 
-  Manually select features 
-```
-
-#### 質問に答える3 (Yarnを選択)
-```
-? Pick the package manager to use when installing dependencies: (Use arrow keys)
-❯ Use Yarn 
-  Use NPM 
-```
-#### 作成Success後にVueを起動
+>>>>>>> 0ca33f1a995131aec47aabc3dc1ef666d87eb5f2
+#### Vueサーバーを起動
 ```
 yarn serve
 ```
 
-#### Vue停止はCTRL+C。コンテナから出る時はexitと入力。コンテナ停止はdocker-compose stop
+<<<<<<< HEAD
+#### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。
+=======
+#### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。コンテナ停止はdocker-compose stop
+>>>>>>> 0ca33f1a995131aec47aabc3dc1ef666d87eb5f2
 
 
 ## ブラウザ上でbackendとfrontendの動作確認
