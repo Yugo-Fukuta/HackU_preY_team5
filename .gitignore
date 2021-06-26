@@ -3,4 +3,3 @@
 .DS_Store
 *.pyc
 *__pycache__/
-#/backend/seed/

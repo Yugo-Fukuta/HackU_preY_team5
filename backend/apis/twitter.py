@@ -6,6 +6,7 @@ from database import get_db, SessionLocal
 from models.twitter import TwitterModel
 from sqlalchemy.sql.expression import func, select
 from apis.api_components.twitter_search import Twitter_Search_Instance
+import random
 
 class TwitterSchema(BaseModel):
     whose: str
@@ -23,9 +24,9 @@ def read_twitter_auth_list(db_session: Session, whose: str):
 def read_twitter_row(db_session: Session, whose: str, nankome: int):
     return db_session.query(TwitterModel).filter(TwitterModel.whose == whose, TwitterModel.nankome==nankome).first()
 
-#認証情報の取得(テーブルの１行目)
+#認証情報の取得(テーブル全体からランダム)
 def read_twitter_auth_first(db_session: Session):
-    return db_session.query(TwitterModel).first()
+    return random.choice(db_session.query(TwitterModel).all())
 
 router = APIRouter()
 

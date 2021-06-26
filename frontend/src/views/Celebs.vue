@@ -4,15 +4,14 @@
         <div class="header">
             <div class="search-box">
                 <img src="@/assets/search.png" class="search-icon">
-                <!-- <input type="text" name="name" placeholder="a" v-model="name" class="input-form"> -->
                 <input @keydown.enter="trigger" v-model="newName" class="input-form">
-                <img @click="addOshi" src="@/assets/like.png" class="like-button">
+                <img v-if="isntOshi" @click="addOshi" src="@/assets/like.png" class="like-button">
+                <img v-else @click="deleteOshi" src="@/assets/heart.png" class="like-button">
             </div>
         </div>
-        <div v-for="(movie, index) in celebInfo" v-bind:key="movie.id.videoId">
+        <div v-for="(movie, index) in celebInfo" v-bind:key="movie.videoUrl">
                 <div class="ycontent">
-                    <iframe width="330" height="185" class="y-movie" v-bind:src="movie.id.videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <!-- <img height="185" v-bind:src="movie.snippet.thumbnails.medium.url" class="y-sumnail"> -->
+                    <iframe width="330" height="185" class="y-movie" v-bind:src="movie.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="ycontent ycontent-sub">
                     <img src="@/assets/content-banner.png" class="content-banner">
@@ -51,29 +50,56 @@ export default {
                 type: [Boolean],
                 default: false
             },
+            isntOshi: true,
+            oshido: 0
         };
     },
     mounted() {
         this.params.q = this.name;
-        axios.get("https://www.googleapis.com/youtube/v3/search", {
-            params: this.params
+        axios.get("http://localhost:5000/get_youtube_data", {
+            params: {
+                q: this.params.q,
+                maxResults: this.params.maxResults
+            }
         })
         .then(response => {
             console.log(response)
-            this.celebInfo = response.data.items
+            this.celebInfo = response.data[0]
             this.celebInfo.forEach(element => {
-                element.id.videoId = "https://www.youtube.com/embed/" + element.id.videoId
+                element.videoUrl = "https://www.youtube.com/embed/" + element.id
             });
         })
         .catch(error => {
-            console.log(error)
+            console.log(error.response)
         })
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                axios.get("http://localhost:5000/get_oshido", {
+                    params: {
+                        uid: user.uid,
+                        celeb_name: this.params.q
+                    }
+                })
+                .then(response => {
+                    console.log(response)
+                    this.oshido = response.data[0].oshido
+                    if (this.oshido == null) {
+                        this.isntOshi = true
+                    } else {
+                        this.isntOshi = false
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            }
+        });
     },
-    // watch: {
-    //     '$route' (to) {
-    //         this.trigger(to.event)
-    //     }
-    // },
+    watch: {
+        '$route' (to) {
+            this.trigger(to.event)
+        }
+    },
     methods: {
         toggleBtn: function(i) {
             this.isActive[i] = !this.isActive[i]
@@ -91,7 +117,39 @@ export default {
         addOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    this.uid = user.uid;
+                    axios.post("http://localhost:5000/register_oshido", {
+                        uid: user.uid,
+                        celeb_name: this.params.q,
+                        oshido: 0
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.isntOshi = false
+                    })
+                    .catch(error => {
+                        console.log(error.response.data)
+                    })
+                } else {
+                    this.$router.push('/signup')
+                }
+            });
+        },
+        deleteOshi: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.delete("http://localhost:5000/delete_oshido", {
+                        params: {
+                            uid: user.uid,
+                            celeb_name: this.params.q,
+                        }
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.isntOshi = true
+                    })
+                    .catch(error => {
+                        console.log(error.response.data)
+                    })
                 } else {
                     this.$router.push('/signup')
                 }
