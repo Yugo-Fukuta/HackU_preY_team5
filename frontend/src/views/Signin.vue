@@ -1,7 +1,7 @@
 <template>
   <div class="signin">
     <h2>Sign in</h2>
-    <input type="text" placeholder="Username" v-model="username">
+    <input type="text" placeholder="Email" v-model="email">
     <input type="password" placeholder="Password" v-model="password">
     <button @click="signIn">Signin</button>
     <p>You don't have an account? 
@@ -17,13 +17,13 @@ export default {
   name: 'Signin',
   data () {
     return {
-      username: '',
+      email: '',
       password: ''
     }
   },
   methods: {
       signIn: function () {
-      firebase.auth().signInWithEmailAndPassword(this.username, this.password).then(
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
         user => {
           alert('Success!', user.email)
           this.$router.push('/')

@@ -1,5 +1,23 @@
 # Team5_AliceとBob
 
+## RestAPIを試す
+#### ※コマンドは全てbackendコンテナの/usr/src/app/backend で行う
+#### 1.backendディレクトリでマイグレーション実行
+```
+alembic upgrade head
+```
+
+#### ※1.でエラーが出る場合、migrationフォルダを削除して以下コマンドを実行してから1.を実行
+```
+alembic revision --autogenerate -m 'create oshido'
+```
+
+#### 2.以下のページでRestAPIを試せる
+```
+http://localhost:5000/docs
+```
+
+
 ## Docker環境構築
 
 ### コンテナ作成について(参考記事)
@@ -28,36 +46,13 @@ docker-compose ps
 docker-compose exec frontend sh
 ```
 
-#### Vueアプリの作成
-```
-vue create .
-```
 
-#### 質問に答える1 (Yを入力)
-```
-? Generate project in current directory? (Y/n) Y
-```
-
-#### 質問に答える2 (Vue 3を選択)
-```
-? Please pick a preset: 
-  Default ([Vue 2] babel, eslint) 
-❯ Default (Vue 3) ([Vue 3] babel, eslint) 
-  Manually select features 
-```
-
-#### 質問に答える3 (Yarnを選択)
-```
-? Pick the package manager to use when installing dependencies: (Use arrow keys)
-❯ Use Yarn 
-  Use NPM 
-```
-#### 作成Success後にVueを起動
+#### Vueサーバーを起動
 ```
 yarn serve
 ```
 
-#### Vue停止はCTRL+C。コンテナから出る時はexitと入力。
+#### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。コンテナ停止はdocker-compose stop
 
 
 ## ブラウザ上でbackendとfrontendの動作確認
