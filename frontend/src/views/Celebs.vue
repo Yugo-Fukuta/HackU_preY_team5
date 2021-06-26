@@ -10,16 +10,34 @@
             </div>
         </div>
 
-        <div v-for="(movie, index) in celebInfo" v-bind:key="movie.videoUrl">
+        <div v-for="(movie, index) in celebInfo" v-bind:key="movie.videoUrl" class="content-box">
+            <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
+            <img src="@/assets/youtube-icon.png" class="youtube-icon">
             <div class="content">
                 <iframe width="330" height="185" class="y-movie" v-bind:src="movie.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                <div class="content-sub-top">
+                    <div class="content-mini-box">
+                        <div class="ymovie-title">{{ movie.title.substring(0,72)+"..." }}</div>
+                        <div class="ymovie-view-count">{{ movie.viewCount }}回視聴</div>
+                        <div class="ymovie-publishedat">{{ movie.publishedAt.substring(0,10) }}</div>
+                        <img src="@/assets/like-button.png" class="like-icon">
+                        <div class="like-count">{{ movie.likeCount }}</div>
+                        <img src="@/assets/dislike-button.png" class="dislike-icon">
+                        <div class="dislike-count">{{ movie.dislikeCount }}</div>
+                    </div>
+                </div>
+                <div class="content-sub-bottom">
+                    <div class="content-mini-box">
+                    </div>
+                </div>
                 <img src="@/assets/content-banner.png" class="content-banner">
             </div>
         </div>
 
-        <div v-for="(tweet, index) in celebTwInfo" v-bind:key="tweet.text">
+        <div v-for="(tweet, index) in celebTwInfo" v-bind:key="tweet.text" class="content-box">
+            <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
             <div class="content">
                 <div class="content-line">
                     <img v-bind:src="tweet.user.profile_image_url_https" class="tw-profile-image">
@@ -148,9 +166,6 @@ export default {
             .then(response => {
                 console.log(response)
                 this.celebTwInfo = response.data[0].statuses;
-                // this.celebInfo.forEach(element => {
-                //     element.videoUrl = "https://www.youtube.com/embed/" + element.id
-                // });
             })
             .catch(error => {
                 console.log(error.response)
@@ -260,10 +275,16 @@ export default {
     top: 10px;
 }
 
+.content-box {
+    width: 341px;
+    margin: 0 auto 20px auto;
+    position: relative;
+}
+
 .content {
     width: 341px;
     height: 193px;
-    margin: 0 auto 20px auto;
+    margin: 0 auto 25px auto;
     background: #FFFFFF;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
@@ -285,17 +306,47 @@ export default {
 }
 
 .content-sub {
-    margin-top: -210px;
+    margin-top: -220px;
     position: relative;
     z-index: 1;
+}
+
+.content-mini-box {
+    width: 330px;
+    margin: 0 auto;
+}
+
+.content-sub-top {
+    height: 145px;
+    border-bottom: 1px solid #DDDDDD;
 }
 
 .content-banner {
     width: 100%;
     position: absolute;
     left: 0;
-    top: 94%;
+    top: 96%;
     z-index: 6;
+}
+
+.active {
+    transform: translateY(170px);
+    margin-bottom: 196px;
+}
+
+.sns-icon-banner {
+    position: absolute;
+    left: 0;
+    top: -18px;
+    z-index: 1;
+}
+
+.youtube-icon {
+    position: absolute;
+    width: 16px;
+    left: 10px;
+    top: -16px;
+    z-index: 2;
 }
 
 .y-sumnail {
@@ -306,6 +357,51 @@ export default {
 .y-movie {
     border-radius: 5px;
     border: 3px solid #F4D153;
+}
+
+.ymovie-title {
+    padding-top: 30px;
+    height: 60px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.ymovie-view-count {
+    padding-top: 5px;
+    font-size: 12px;
+}
+
+.ymovie-publishedat{
+    padding-top: 5px;
+    font-size: 12px;
+}
+
+.like-count {
+    position: absolute;
+    left: 120px;
+    top: 121px;
+    font-size: 8px;
+}
+
+.like-icon {
+    position: absolute;
+    left: 120px;
+    top: 95px;
+    height: 20px;
+}
+
+.dislike-count {
+    position: absolute;
+    left: 170px;
+    top: 121px;
+    font-size: 8px;
+}
+
+.dislike-icon {
+    position: absolute;
+    left: 170px;
+    top: 95px;
+    height: 20px;
 }
 
 .tw-profile-image {
@@ -327,7 +423,6 @@ export default {
 
 .tw-user-name{
     display: inline-block;
-    font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: bold;
 }
 
@@ -341,8 +436,6 @@ export default {
     left: 65px;
     top: 30px;
     width: 75%;
-    text-align: left;
-    font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 14px;
 }
 
@@ -382,11 +475,6 @@ export default {
 
     background: #FFFFFF;
     border-radius: 45px;
-}
-
-.active {
-    transform: translateY(170px);
-    margin-bottom: 190px;
 }
 
 </style>
