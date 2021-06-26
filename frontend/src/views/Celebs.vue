@@ -9,16 +9,34 @@
                 <img v-else @click="deleteOshi" src="@/assets/heart.png" class="like-button">
             </div>
         </div>
+
         <div v-for="(movie, index) in celebInfo" v-bind:key="movie.videoUrl">
-                <div class="ycontent">
-                    <iframe width="330" height="185" class="y-movie" v-bind:src="movie.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div class="content">
+                <iframe width="330" height="185" class="y-movie" v-bind:src="movie.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                <img src="@/assets/content-banner.png" class="content-banner">
+            </div>
+        </div>
+
+        <div v-for="(tweet, index) in celebTwInfo" v-bind:key="tweet.text">
+            <div class="content">
+                <div class="content-line">
+                    <img v-bind:src="tweet.user.profile_image_url_https" class="tw-profile-image">
+                    <div class="tw-username-box">
+                        <div class="tw-user-name">{{ tweet.user.name }}</div>
+                        <img v-if="tweet.user.verified" src="@/assets/twitter-verified-mark.png" class="tw-verified-img">
+                    </div>
+                    <div class="tw-text">{{ tweet.text }}</div>
                 </div>
-                <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="ycontent ycontent-sub">
-                    <img src="@/assets/content-banner.png" class="content-banner">
-                </div>
+            </div>
+            <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                <img src="@/assets/content-banner.png" class="content-banner">
+            </div>
         </div>
 
         <footer>
+            <div class="foot-space"></div>
             <div class="foot-nav">
                 <div class="oshido-circle2"></div>
                 <img src="@/assets/oshido-circle.png" class="oshido-circle-img">
@@ -39,11 +57,12 @@ export default {
             name: this.$route.params.celebName,
             newName: '',
             celebInfo: '',
+            celebTwInfo: '',
             params: {
                 q: "", // 検索クエリを指定
                 part: "snippet",
                 type: "video",
-                maxResults: "5", // 最大検索数
+                maxResults: "3", // 最大検索数
                 key: process.env.VUE_APP_YOUTUBE_API_KEY
             },
             isActive: {
@@ -55,45 +74,9 @@ export default {
         };
     },
     mounted() {
-        this.params.q = this.name;
-        axios.get("http://localhost:5000/get_youtube_data", {
-            params: {
-                q: this.params.q,
-                maxResults: this.params.maxResults
-            }
-        })
-        .then(response => {
-            console.log(response)
-            this.celebInfo = response.data[0]
-            this.celebInfo.forEach(element => {
-                element.videoUrl = "https://www.youtube.com/embed/" + element.id
-            });
-        })
-        .catch(error => {
-            console.log(error.response)
-        })
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                axios.get("http://localhost:5000/get_oshido", {
-                    params: {
-                        uid: user.uid,
-                        celeb_name: this.params.q
-                    }
-                })
-                .then(response => {
-                    console.log(response)
-                    this.oshido = response.data[0].oshido
-                    if (this.oshido == null) {
-                        this.isntOshi = true
-                    } else {
-                        this.isntOshi = false
-                    }
-                })
-                .catch(error => {
-                    console.log(error.response)
-                })
-            }
-        });
+        this.getYoutube() // Youtubeの動画取得
+        this.getTweet() // Twitterの動画取得
+        this.isOshi() // ユーザーが検索された有名人を推しているか判定
     },
     watch: {
         '$route' (to) {
@@ -119,7 +102,7 @@ export default {
                 if (user) {
                     axios.post("http://localhost:5000/register_oshido", {
                         uid: user.uid,
-                        celeb_name: this.params.q,
+                        celeb_name: this.name,
                         oshido: 0
                     })
                     .then(response => {
@@ -140,7 +123,7 @@ export default {
                     axios.delete("http://localhost:5000/delete_oshido", {
                         params: {
                             uid: user.uid,
-                            celeb_name: this.params.q,
+                            celeb_name: this.name,
                         }
                     })
                     .then(response => {
@@ -152,6 +135,66 @@ export default {
                     })
                 } else {
                     this.$router.push('/signup')
+                }
+            });
+        },
+        getTweet: function() {
+            axios.get("http://localhost:5000/get_twitter_data", {
+                params: {
+                    q: this.name,
+                    maxResults: this.params.maxResults
+                }
+            })
+            .then(response => {
+                console.log(response)
+                this.celebTwInfo = response.data[0].statuses;
+                // this.celebInfo.forEach(element => {
+                //     element.videoUrl = "https://www.youtube.com/embed/" + element.id
+                // });
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+        getYoutube: function() {
+            axios.get("http://localhost:5000/get_youtube_data", {
+                params: {
+                    q: this.name,
+                    maxResults: this.params.maxResults
+                }
+            })
+            .then(response => {
+                console.log(response)
+                this.celebInfo = response.data[0]
+                this.celebInfo.forEach(element => {
+                    element.videoUrl = "https://www.youtube.com/embed/" + element.id
+                });
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+        isOshi: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.get("http://localhost:5000/get_oshido", {
+                        params: {
+                            uid: user.uid,
+                            celeb_name: this.name
+                        }
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.oshido = response.data[0].oshido
+                        if (this.oshido == null) {
+                            this.isntOshi = true
+                        } else {
+                            this.isntOshi = false
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
                 }
             });
         }
@@ -217,7 +260,7 @@ export default {
     top: 10px;
 }
 
-.ycontent {
+.content {
     width: 341px;
     height: 193px;
     margin: 0 auto 20px auto;
@@ -230,10 +273,29 @@ export default {
     z-index: 2;
 }
 
-.ycontent-sub {
+.content-line {
+    position: absolute;
+    width: 330px;
+    height: 185px;
+    left: 2px;
+    top: 1px;
+    z-index: 3;
+    border-radius: 5px;
+    border: 3px solid #F4D153;
+}
+
+.content-sub {
     margin-top: -210px;
     position: relative;
     z-index: 1;
+}
+
+.content-banner {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 94%;
+    z-index: 6;
 }
 
 .y-sumnail {
@@ -244,6 +306,48 @@ export default {
 .y-movie {
     border-radius: 5px;
     border: 3px solid #F4D153;
+}
+
+.tw-profile-image {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    border-radius: 100%;
+    border: 1px solid #F4D153;
+}
+
+.tw-username-box {
+    position: absolute;
+    text-align: left;
+    width: 80%;
+    height: 25px;
+    left: 65px;
+    top: 5px;
+}
+
+.tw-user-name{
+    display: inline-block;
+    font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: bold;
+}
+
+.tw-verified-img{
+    width: 15px;
+    margin-left: 5px;
+}
+
+.tw-text{
+    position: absolute;
+    left: 65px;
+    top: 30px;
+    width: 75%;
+    text-align: left;
+    font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+}
+
+.foot-space{
+    height: 75px;
 }
 
 .foot-nav {
@@ -278,14 +382,6 @@ export default {
 
     background: #FFFFFF;
     border-radius: 45px;
-}
-
-.content-banner {
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 94%;
-    z-index: 6;
 }
 
 .active {
