@@ -3,8 +3,4 @@
 .DS_Store
 *.pyc
 *__pycache__/
-<<<<<<< HEAD
-#/backend/seed/
-=======
-#/backend/seed/
->>>>>>> 0ca33f1a995131aec47aabc3dc1ef666d87eb5f2
+/backend/seed/seed_api_keys.py
