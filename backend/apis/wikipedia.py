@@ -1,6 +1,6 @@
 from typing import Optional
 from fastapi import APIRouter, Query
-f#rom apis.api_components.wikipedia_fetch import wikipedia_fetch_prof
+#from apis.api_components.wikipedia_fetch import wikipedia_fetch_prof
 import urllib.request as req
 import urllib.parse as up
 #import lxml.html as lh
