@@ -61,13 +61,14 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
                 res_wk = executor.submit(get_wikipedia_prof, celeb_name, 1).result()[0]
         
         if post_flag:
+            res_yt = res_yt1 + res_yt2
             req = APICacheModel(celeb_name = celeb_name, yt_cache=res_yt, tw_cache=res_tw, nw_cache=res_nw, wk_cache=res_wk)
             db.add(req)
             db.commit()
         elif put_flag:
-            res_yt = res_yt1 + res_yt2
             req = com
             if yt_put:
+                res_yt = res_yt1 + res_yt2
                 req.yt_cache = res_yt
             if tw_put:
                 req.tw_cache = res_tw
@@ -87,7 +88,8 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
     for n in res_nw:
         n['where']='news'
         res.append(n)
-    res_wk['where']='wikipedia'
+    if res_wk != None and res_wk != {}:
+        res_wk['where']='wikipedia'
 
     res = random.sample(res, len(res))
     res.append(res_wk)
