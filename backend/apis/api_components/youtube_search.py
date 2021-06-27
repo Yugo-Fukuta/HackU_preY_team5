@@ -110,6 +110,86 @@ class YouTube_Search_Instance:
 
         return meta_data
 
+    def get_channel_videos(self, q, maxResults=10):
+        youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
+            developerKey=self.DEVELOPER_KEY)
+
+        search_response = youtube.search().list(
+                part="id,snippet",
+                q = q,
+                maxResults = 1, # 一番上にそれらしい人が出てくるので1に固定している
+                type = "channel",
+                regionCode = "JP",
+        ).execute()
+
+        item = search_response["items"][0]
+        channel_data = {
+                "channelId": item["snippet"]["channelId"],
+                "channelTitle": item["snippet"]["channelTitle"],
+                "thumbnailsUrl": item["snippet"]["thumbnails"]["high"]["url"],
+                "description": item["snippet"]["description"]
+                }
+
+        search_response = youtube.search().list(
+            part="id,snippet",
+            maxResults=maxResults,
+            channelId = channel_data["channelId"],
+            type="video",
+            safeSearch="strict",
+            regionCode="JP",
+            order = "date",
+          ).execute()
+
+        videos = []
+        ids = []
+
+        # Add each result to the appropriate list, and then display the lists of
+        # matching videos, channels, and playlists.
+        for search_result in search_response.get("items", []):
+            if search_result["id"]["kind"] == "youtube#video":
+                ids.append(search_result["id"]["videoId"])
+
+        res = youtube.videos().list(
+        part='snippet,contentDetails,statistics',
+        id=','.join(ids) # カンマ区切りで複数のidを一度に渡せます
+        ).execute()
+
+        for vid in res["items"]:
+            duration1 = isodate.parse_duration(vid['contentDetails']['duration'])
+            duration = int(duration1.total_seconds())
+            hour = duration // 3600
+            min = (duration-3600*hour) // 60
+            sec = duration % 60
+            if hour > 0:
+                durationHMS = '%i:%i:%i' % (hour, min, sec)
+            else:
+                durationHMS = '%i:%i' % (min, sec)
+            pbat = vid['snippet']['publishedAt']
+            jst_time = parser.parse(pbat)
+            jst_tz = timezone(timedelta(hours=+9))
+            likeCount = None
+            dislikeCount = None
+            try:
+                likeCount = int(vid['statistics']['likeCount'])
+                dislikeCount = int(vid['statistics']['dislikeCount'])
+            except:
+                pass
+            videos.append({
+            'title': vid['snippet']['title'],
+            'id': vid['id'],
+            'videoUrl': 'https://www.youtube.com/watch?v=%s' % vid['id'],
+            'thumbnailsUrl': vid["snippet"]["thumbnails"]["high"]["url"],
+            'description': vid['snippet']['description'],
+            'publishedAt': datetime.fromtimestamp(jst_time.timestamp(), jst_tz).strftime("%Y/%m/%d %H:%M"),
+            'duration': durationHMS,
+            'viewCount': int(vid['statistics']['viewCount']),
+            'likeCount': likeCount,
+            'dislikeCount': dislikeCount,
+            })
+
+        channel_data["videos"] = videos
+        return channel_data
+
     if __name__ == "__main__":
         argparser.add_argument("--q", help="Search term", default="Google")
         argparser.add_argument("--max-results", help="Max results", default=25)
