@@ -36,6 +36,20 @@ def get_twitter_data(q: str, maxResults: int, db: Session = Depends(get_db)):
     res = Twitter_Search_Instance(read_twitter_auth_first(db)).twitter_search(q, maxResults)
     return res, 200
 
+@router.get("/get_twitter_user/")
+def get_twitter_user(q: str, db: Session = Depends(get_db)):
+    """`q`で指定される人物らしいtwitterアカウントのuser-objectを返します。
+    - user-object について: https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/user
+    - 有用そうな属性：
+      - id_str
+      - name: 表示名
+      - veryfied: 公式マークの有無
+    """
+    res = Twitter_Search_Instance(read_twitter_auth_first(db))\
+          .twitter_user_search(q)
+    return res[0]
+
+
 #その人のAPIキー一覧
 @router.get("/get_twitter_auth_list/")
 def get_twitter_auth_list(whose: str, db: Session = Depends(get_db)):
