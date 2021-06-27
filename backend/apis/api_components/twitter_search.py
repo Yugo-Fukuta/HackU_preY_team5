@@ -1,5 +1,5 @@
-from oauth2client.tools import argparser
-from twitter import *                                                           
+import argparse
+from twitter import *
 
 # Set DEVELOPER_KEY to the API key value from the APIs & auth > Registered apps
 # tab of
@@ -18,23 +18,33 @@ class Twitter_Search_Instance:
             self.api_key, self.api_key_secret))
 
         data = twitter.search.tweets(q=q, lang='ja', result_type='popular', count=maxResults)
-        return data
+        tweets_data = data["statuses"]
 
-    def twitter_user_search(self, q, maxResults=5):
-        twitter = Twitter(
-            auth=OAuth(self.access_token, self.access_token_secret,
-                       self.api_key, self.api_key_secret)
-        )
-        data = twitter.users.search(q=q, lang="ja", count=maxResults)
-        return data
+        # 画像URL処理
+        for i, tw in enumerate(tweets_data):
+            media = tw["entities"].get("media")
+            tweets_data[i]["media_urls"] = []
 
+            if media:
+                for m in media:
+                    tweets_data[i]["media_urls"].append(m["media_url"])
+                    tweets_data[i]["text"] = \
+                        tweets_data[i]["text"].replace(m["url"], "").strip()
 
-    if __name__ == "__main__":
-        argparser.add_argument("--q", help="Search term", default="Google")
-        argparser.add_argument("--max-results", help="Max results", default=25)
-        args = argparser.parse_args()
+        return tweets_data
 
-        try:
-            twitter_search(args)
-        except Exception as e:
-            print(e)
+if __name__ == "__main__":
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument("--q", help="Search term", default="Google")
+    argparser.add_argument("--max-results", help="Max results", default=25)
+    argparser.add_argument("--api-key", required=True)
+    argparser.add_argument("--api-key-secret", required=True)
+    argparser.add_argument("--access-token", required=True)
+    argparser.add_argument("--access-token-secret", required=True)
+    args = argparser.parse_args()
+
+    try:
+        t = Twitter_Search_Instance(args)
+        t.twitter_search(args.q, args.max_results)
+    except Exception as e:
+        print(e)

@@ -39,6 +39,12 @@ def get_youtube_meta_data(videoIDs: str, db: Session = Depends(get_db)):
     res = YouTube_Search_Instance(read_youtube_key(db)).get_meta_data(videoIDs)
     return res, 200
 
+# 有名人のチャンネル動画を取得
+@router.get("/get_youtube_channel_data/")
+def get_youtube_channel_data(q: str, maxResults: int, db: Session = Depends(get_db)):
+    res = YouTube_Search_Instance(read_youtube_key(db)).get_channel_videos(q, maxResults)
+    return res, 200
+
 #その人のAPIキー一覧
 @router.get("/get_youtube_key_list/")
 def get_youtube_key_list(whose: str, db: Session = Depends(get_db)):

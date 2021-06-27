@@ -46,7 +46,7 @@ docker-compose ps
 docker-compose exec frontend yarn serve
 ```
 
-#### Vueサーバー停止はCTRL+C。Vueを止めずに出るならCtrl-P + Ctrl-Q。コンテナから出る時はexitと入力。コンテナ停止はdocker-compose stop
+#### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。止めずに出るならCtrl-P+Ctrl-Q。コンテナ停止はdocker-compose stop
 
 
 ## ブラウザ上でbackendとfrontendの動作確認

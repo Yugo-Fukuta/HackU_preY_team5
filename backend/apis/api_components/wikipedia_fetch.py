@@ -7,7 +7,6 @@ import wptools
 import time
 import urllib.parse
 
-
 def wikipedia_fetch_prof(q, silent=True):
     langs = ["ja", "en"]
 
