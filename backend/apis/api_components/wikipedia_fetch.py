@@ -10,7 +10,6 @@ import urllib.parse
 
 def wikipedia_fetch_prof(q, silent=True):
     langs = ["ja", "en"]
-    infobox = None
 
     # 日本人でも日本語版のinfoboxが（なぜか）取れない人がいるので
     for l in langs:
@@ -18,7 +17,7 @@ def wikipedia_fetch_prof(q, silent=True):
         # 大いにwptoolsのソースを引用
         url = (f"https://{l}.wikipedia.org/w/api.php?"
                f"action=parse&page={urllib.parse.quote(q)}"
-               "&prop=parsetree&format=json&redirect")
+               "&prop=parsetree&format=json&formatversion=2&redirect")
         with io.BytesIO() as b:
             curl = pycurl.Curl()
             curl.setopt(pycurl.URL, url)
@@ -26,7 +25,12 @@ def wikipedia_fetch_prof(q, silent=True):
             curl.perform()
             body = b.getvalue()
         data = json.loads(body)
-        ptree = data["parse"]["parsetree"]["*"]
+        ptree = data.get("parse")
+        if ptree:
+            ptree = ptree.get("parsetree")
+
+        if not ptree:
+            continue
 
         # infobox らしいものを探す
         for item in lxml.etree.fromstring(ptree).\
