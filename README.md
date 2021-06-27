@@ -41,25 +41,12 @@ docker-compose ps
 ### Vueのインストール(参考記事)
 <https://px-wing.hatenablog.com/entry/2020/11/12/065719>
 
-#### frontendコンテナに入る
-```
-docker-compose exec frontend sh
-```
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 0ca33f1a995131aec47aabc3dc1ef666d87eb5f2
 #### Vueサーバーを起動
 ```
-yarn serve
+docker-compose exec frontend yarn serve
 ```
 
-<<<<<<< HEAD
-#### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。
-=======
-#### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。コンテナ停止はdocker-compose stop
->>>>>>> 0ca33f1a995131aec47aabc3dc1ef666d87eb5f2
+#### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。止めずに出るならCtrl-P+Ctrl-Q。コンテナ停止はdocker-compose stop
 
 
 ## ブラウザ上でbackendとfrontendの動作確認
