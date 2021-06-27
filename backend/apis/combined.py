@@ -21,7 +21,8 @@ router = APIRouter()
 def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
     max_yt = 50 #youtubeのmaxResults
     max_tw = 100 #twitterのmaxResults
-    res_yt = res_tw = res_nw = res_wk = []
+    res_yt = res_tw = res_nw = []
+    res_wk = {}
     yt_put = tw_put = nw_put = wk_put = True
     post_flag = False
     put_flag = False
@@ -56,7 +57,7 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
                 res_tw = executor.submit(get_twitter_data, celeb_name, max_tw, db).result()[0]
             if res_nw == []:
                 res_nw = executor.submit(get_news_data, celeb_name, db).result()[0]["articles"]
-            if res_wk == []:
+            if res_wk == {}:
                 res_wk = executor.submit(get_wikipedia_prof, celeb_name, 1).result()[0]
         
         if post_flag:
