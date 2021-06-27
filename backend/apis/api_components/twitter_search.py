@@ -20,15 +20,6 @@ class Twitter_Search_Instance:
         data = twitter.search.tweets(q=q, lang='ja', result_type='popular', count=maxResults)
         return data
 
-    def twitter_user_search(self, q, maxResults=5):
-        twitter = Twitter(
-            auth=OAuth(self.access_token, self.access_token_secret,
-                       self.api_key, self.api_key_secret)
-        )
-        data = twitter.users.search(q=q, lang="ja", count=maxResults)
-        return data
-
-
     if __name__ == "__main__":
         argparser.add_argument("--q", help="Search term", default="Google")
         argparser.add_argument("--max-results", help="Max results", default=25)
