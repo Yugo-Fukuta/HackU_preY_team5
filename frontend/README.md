@@ -9,7 +9,7 @@ cd HackU_preY_team5
 git checkout ys
 docker-compose up -d --build
 docker-compose exec frontend sh
-``
+```
 
 ## Vue.jsでのデプロイ方法
 ```sh
