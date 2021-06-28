@@ -20,16 +20,27 @@ class Twitter_Search_Instance:
         data = twitter.search.tweets(q=q, lang='ja', result_type='popular', count=maxResults)
         tweets_data = data["statuses"]
 
-        # 画像URL処理
+        # URL処理
         for i, tw in enumerate(tweets_data):
+            urls = tw["entities"].get("urls")
             media = tw["entities"].get("media")
-            tweets_data[i]["media_urls"] = []
+            tweets_data[i]["extracted_urls"] = []
+
+            if urls:
+                for u in urls:
+                    tweets_data[i]["extracted_urls"].append(u["expanded_url"])
+                    tweets_data[i]["text"] = \
+                        tweets_data[i]["text"].replace(f"{u['url']}\n", "")\
+                                              .replace(u["url"], "")
 
             if media:
                 for m in media:
-                    tweets_data[i]["media_urls"].append(m["media_url"])
+                    tweets_data[i]["extracted_urls"].append(m["media_url"])
                     tweets_data[i]["text"] = \
-                        tweets_data[i]["text"].replace(m["url"], "").strip()
+                        tweets_data[i]["text"].replace(f"{m['url']}\n", "")\
+                                              .replace(m["url"], "")
+
+            tweets_data[i]["text"] = tweets_data[i]["text"].strip()
 
         return tweets_data
 
