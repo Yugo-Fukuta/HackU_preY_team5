@@ -19,7 +19,7 @@
             <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
                 <div class="content-sub-top">
                     <div class="content-mini-box">
-                        <div class="ymovie-title">{{ movie.title.substring(0,72)+"..." }}</div>
+                        <div class="ymovie-title">{{ movie.title.substring(0,72) }}</div>
                         <div class="ymovie-view-count">{{ movie.viewCount }}回視聴</div>
                         <div class="ymovie-publishedat">{{ movie.publishedAt.substring(0,10) }}</div>
                         <img src="@/assets/like-button.png" class="like-icon">
@@ -42,7 +42,7 @@
                 <div class="content-line">
                     <img v-bind:src="tweet.user.profile_image_url_https" class="tw-profile-image">
                     <div class="tw-username-box">
-                        <div class="tw-user-name">{{ tweet.user.name }}</div>
+                        <div class="tw-user-name">{{ tweet.user.name.substring(0,20) }}</div>
                         <img v-if="tweet.user.verified" src="@/assets/twitter-verified-mark.png" class="tw-verified-img">
                     </div>
                     <div class="tw-text">{{ tweet.text }}</div>
@@ -56,10 +56,33 @@
         <footer>
             <div class="foot-space"></div>
             <div class="foot-nav">
-                <div class="oshido-circle2"></div>
-                <img src="@/assets/oshido-circle.png" class="oshido-circle-img">
+                <img v-if="oshido>=100" src="@/assets/gold-medal.png" class="medal gold-medal medal-1">
+                <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-1">
+                <img v-if="oshido>=50" src="@/assets/silver-medal.png" class="medal silver-medal medal-2">
+                <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-2">
+                <img v-if="oshido>=20" src="@/assets/bronze-medal.png" class="medal bronze-medal medal-3">
+                <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-3">
+                <img src="@/assets/user.png" class="user-icon">
+                <img v-if="sideMenuActive!=true" @click="toggleList" src="@/assets/list.png" class="list-icon">
+                <img v-else @click="toggleList" src="@/assets/list-open.png" class="list-icon">
+                <img src="@/assets/footer.png" class="footer-img">
             </div>
         </footer>
+
+        <!-- <transition name="slide"> -->
+            <div v-show="sideMenuActive" class="side-menu">
+                <img src="@/assets/hammburger.png" class="side-menu">
+                <table class="side-menu-content-box">
+                    <!-- {{ oshiList }} -->
+                    <tr v-for="oshi in oshiList" v-bind:key="oshi.name">
+                        <td class="oshi-list-name">{{ oshi.celeb_name.substring(0,10) }}</td>
+                        <td class="oshi-list-oshido-label">オシ度</td>
+                        <td class="oshi-list-oshido">{{ oshi.oshido }}</td>
+                    </tr>
+                </table>
+            </div>
+        <!-- </transition> -->
+
     </div>
 </template>
 
@@ -76,25 +99,22 @@ export default {
             newName: '',
             celebInfo: '',
             celebTwInfo: '',
-            params: {
-                q: "", // 検索クエリを指定
-                part: "snippet",
-                type: "video",
-                maxResults: "3", // 最大検索数
-                key: process.env.VUE_APP_YOUTUBE_API_KEY
-            },
+            maxResults: "3",
             isActive: {
                 type: [Boolean],
                 default: false
             },
+            sideMenuActive: false,
             isntOshi: true,
-            oshido: 0
+            oshido: 0,
+            oshiList: ''
         };
     },
     mounted() {
         this.getYoutube() // Youtubeの動画取得
         this.getTweet() // Twitterの動画取得
         this.isOshi() // ユーザーが検索された有名人を推しているか判定
+        this.getOshiList() // ユーザーの推しリストを取得
     },
     watch: {
         '$route' (to) {
@@ -104,6 +124,9 @@ export default {
     methods: {
         toggleBtn: function(i) {
             this.isActive[i] = !this.isActive[i]
+        },
+        toggleList: function() {
+            this.sideMenuActive = !this.sideMenuActive
         },
         trigger: function(event) {
             if (event.keyCode != 13) return
@@ -126,6 +149,7 @@ export default {
                     .then(response => {
                         console.log(response)
                         this.isntOshi = false
+                        this.getOshiList()
                     })
                     .catch(error => {
                         console.log(error.response.data)
@@ -147,6 +171,7 @@ export default {
                     .then(response => {
                         console.log(response)
                         this.isntOshi = true
+                        this.getOshiList()
                     })
                     .catch(error => {
                         console.log(error.response.data)
@@ -160,7 +185,7 @@ export default {
             axios.get("http://localhost:5000/get_twitter_data", {
                 params: {
                     q: this.name,
-                    maxResults: this.params.maxResults
+                    maxResults: this.maxResults
                 }
             })
             .then(response => {
@@ -175,7 +200,7 @@ export default {
             axios.get("http://localhost:5000/get_youtube_data", {
                 params: {
                     q: this.name,
-                    maxResults: this.params.maxResults
+                    maxResults: this.maxResults
                 }
             })
             .then(response => {
@@ -212,7 +237,25 @@ export default {
                     })
                 }
             });
-        }
+        },
+        getOshiList: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.get("http://localhost:5000/get_oshido_list", {
+                        params: {
+                            uid: user.uid,
+                        }
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.oshiList = response.data[0]
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
+                }
+            });
+        },
     },
 }
 </script>
@@ -355,6 +398,7 @@ export default {
 }
 
 .y-movie {
+    margin-left: 2px;
     border-radius: 5px;
     border: 3px solid #F4D153;
 }
@@ -445,36 +489,121 @@ export default {
 
 .foot-nav {
     position: fixed;
-    z-index: 4;
-    left: 5%;
+    z-index: 7;
+    left: 0;
+    right: 0;
+    margin: auto;
     top: 90%;
-    width: 90%;
-    height: 58px;
-
-    background: #FFFFFF;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 45px;
+    width: 341px;
+    text-align: center;
 }
 
-.oshido-circle-img {
+.footer-img {
+    display: inline;
+    inline-size: 341px;
+}
+
+.medal {
+    position: absolute;
+    width: 25px;
+}
+
+.no-medal {
+    opacity: 20%;
+}
+
+.medal-1 {
+    left: 35px;
+    top: 25px;
+}
+
+.medal-2 {
+    left: 65px;
+    top: 25px;
+}
+
+.medal-3 {
+    left: 95px;
+    top: 25px;
+}
+
+.gold-medal {
+    left: 38px;
+}
+
+.silver-medal {
+    left: 68px;
+}
+
+.bronze-medal {
+    left: 98px;
+}
+
+.user-icon {
+    position: absolute;
+    width: 23px;
+    left: 250px;
+    top: 25px;
+}
+
+.list-icon {
+    position: absolute;
+    width: 23px;
+    left: 300px;
+    top: 25px;
+}
+
+.side-menu {
     position: fixed;
-    z-index: 5;
-    width: 64px;
-    height: 64px;
-    left: 41.5%;
-    top: 89.5%;
+    width: 362px;
+    height: 812px;
+    top: 0;
+    right: -35px;
+    z-index: 6;
 }
 
-.oshido-circle2 {
-    position: fixed;
-    z-index: 4;
-    width: 67px;
-    height: 67px;
-    left: 41.23%;
-    top: 89%;
-
-    background: #FFFFFF;
-    border-radius: 45px;
+.side-menu-content-box {
+    position: absolute;
+    left: 40px;
+    top: 100px;
+    width: 250px;
+    z-index: 7;
+    font-family: Noto Sans JP;
+    font-style: normal;
+    font-weight: bold;
+    color: white;
 }
+
+.oshi-list-name {
+    font-size: 20px;
+    line-height: 35px;
+}
+
+.oshi-list-oshido-label {
+    font-size: 12px;
+    line-height: 26px;
+    width: 40px;
+    padding-left: 60px;
+}
+
+.oshi-list-oshido {
+    font-size: 24px;
+    line-height: 43px;
+    padding-left: 10px;
+}
+
+/* .active2{
+    transform: translateX(170px);
+} */
+
+/* .slide-enter, .slide-leave-to {
+    transform: translateX(100%);
+}
+.slide-enter-to, .slide-leave {
+    transform: translateX(0);
+}
+.slide-enter-active, .slide-leave-active {
+    transition: transform 1s;
+} */
 
 </style>
