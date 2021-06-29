@@ -1,4 +1,5 @@
 import argparse
+from typing import Optional
 from twitter import *
 
 # Set DEVELOPER_KEY to the API key value from the APIs & auth > Registered apps
@@ -21,28 +22,72 @@ class Twitter_Search_Instance:
         tweets_data = data["statuses"]
 
         # URL処理
-        for i, tw in enumerate(tweets_data):
+        self._extract_urls(tweets_data)
+        # for i, tw in enumerate(tweets_data):
+        #     urls = tw["entities"].get("urls")
+        #     media = tw["entities"].get("media")
+        #     tweets_data[i]["extracted_urls"] = []
+
+        #     if urls:
+        #         for u in urls:
+        #             tweets_data[i]["extracted_urls"].append(u["expanded_url"])
+        #             tweets_data[i]["text"] = \
+        #                 tweets_data[i]["text"].replace(f"{u['url']}\n", "")\
+        #                                       .replace(u["url"], "")
+
+        #     if media:
+        #         for m in media:
+        #             tweets_data[i]["extracted_urls"].append(m["media_url"])
+        #             tweets_data[i]["text"] = \
+        #                 tweets_data[i]["text"].replace(f"{m['url']}\n", "")\
+        #                                       .replace(m["url"], "")
+
+        #     tweets_data[i]["text"] = tweets_data[i]["text"].strip()
+
+        return tweets_data
+
+    def twitter_user_search(self, q, maxResults=5,
+                            include_rts=False, include_replies=False):
+        twitter = Twitter(
+            auth=OAuth(self.access_token, self.access_token_secret,
+                       self.api_key, self.api_key_secret)
+        )
+        data = twitter.users.search(q=q, lang="ja", count=maxResults)
+        usrid = data[0]["id_str"]
+
+        res = twitter.statuses.user_timeline(
+            _id=usrid,
+            count=maxResults,
+            include_rts=include_rts,
+            exclude_replies=not include_replies)
+        self._extract_urls(res)
+        return res
+
+    def _extract_urls(self, statuses):
+        """Given a list of statuses, remove all URLs from `text`
+        and store them in `extracted_urls`.
+        """
+        for i, tw in enumerate(statuses):
             urls = tw["entities"].get("urls")
             media = tw["entities"].get("media")
-            tweets_data[i]["extracted_urls"] = []
+            statuses[i]["extracted_urls"] = []
 
             if urls:
                 for u in urls:
-                    tweets_data[i]["extracted_urls"].append(u["expanded_url"])
-                    tweets_data[i]["text"] = \
-                        tweets_data[i]["text"].replace(f"{u['url']}\n", "")\
-                                              .replace(u["url"], "")
+                    statuses[i]["extracted_urls"].append(u["expanded_url"])
+                    statuses[i]["text"] = \
+                        statuses[i]["text"].replace(f"{u['url']}\n", "")\
+                                           .replace(u["url"], "")
 
             if media:
                 for m in media:
-                    tweets_data[i]["extracted_urls"].append(m["media_url"])
-                    tweets_data[i]["text"] = \
-                        tweets_data[i]["text"].replace(f"{m['url']}\n", "")\
-                                              .replace(m["url"], "")
+                    statuses[i]["extracted_urls"].append(m["media_url"])
+                    statuses[i]["text"] = \
+                        statuses[i]["text"].replace(f"{m['url']}\n", "")\
+                                           .replace(m["url"], "")
 
-            tweets_data[i]["text"] = tweets_data[i]["text"].strip()
+            statuses[i]["text"] = statuses[i]["text"].strip()
 
-        return tweets_data
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
