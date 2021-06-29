@@ -33,6 +33,11 @@ class Twitter_Search_Instance:
                        self.api_key, self.api_key_secret)
         )
         data = twitter.users.search(q=q, lang="ja", count=maxResults)
+
+        # 公式マークがないなら`None`
+        if not data[0]["verified"]:
+            return None
+
         usrid = data[0]["id_str"]
 
         res = twitter.statuses.user_timeline(
@@ -81,6 +86,7 @@ if __name__ == "__main__":
 
     try:
         t = Twitter_Search_Instance(args)
-        t.twitter_search(args.q, args.max_results)
+        # t.twitter_search(args.q, args.max_results)
+        print(t.twitter_user_search(args.q, args.max_results))
     except Exception as e:
         print(e)
