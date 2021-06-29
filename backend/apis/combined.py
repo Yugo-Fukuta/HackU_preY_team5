@@ -91,6 +91,6 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
     if res_wk != None and res_wk != {}:
         res_wk['where']='wikipedia'
 
-    res = random.sample(res, len(res))
+    res = random.sample(res, len(res))[:60]
     res.append(res_wk)
     return res
