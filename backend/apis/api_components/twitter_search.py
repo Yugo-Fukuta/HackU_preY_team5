@@ -23,26 +23,6 @@ class Twitter_Search_Instance:
 
         # URL処理
         self._extract_urls(tweets_data)
-        # for i, tw in enumerate(tweets_data):
-        #     urls = tw["entities"].get("urls")
-        #     media = tw["entities"].get("media")
-        #     tweets_data[i]["extracted_urls"] = []
-
-        #     if urls:
-        #         for u in urls:
-        #             tweets_data[i]["extracted_urls"].append(u["expanded_url"])
-        #             tweets_data[i]["text"] = \
-        #                 tweets_data[i]["text"].replace(f"{u['url']}\n", "")\
-        #                                       .replace(u["url"], "")
-
-        #     if media:
-        #         for m in media:
-        #             tweets_data[i]["extracted_urls"].append(m["media_url"])
-        #             tweets_data[i]["text"] = \
-        #                 tweets_data[i]["text"].replace(f"{m['url']}\n", "")\
-        #                                       .replace(m["url"], "")
-
-        #     tweets_data[i]["text"] = tweets_data[i]["text"].strip()
 
         return tweets_data
 
