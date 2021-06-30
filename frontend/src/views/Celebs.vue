@@ -14,7 +14,7 @@
             <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
             <img src="@/assets/youtube-icon.png" class="youtube-icon">
             <div class="content">
-                <iframe width="330" height="185" class="y-movie" v-bind:src="movie.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe  @click="addOshido" width="330" height="185" class="y-movie" v-bind:src="movie.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
                 <div class="content-sub-top">
@@ -54,18 +54,25 @@
         </div>
 
         <footer>
+            <div class="foot-box">
+                <router-link to="/iconlist">[icons]</router-link>
+                <div>Designed by Freepik and distributed by Flaticon</div>
+            </div>
             <div class="foot-space"></div>
             <div class="foot-nav">
+                <img src="@/assets/ranking.png" class="ranking-icon">
                 <img v-if="oshido>=100" src="@/assets/gold-medal.png" class="medal gold-medal medal-1">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-1">
                 <img v-if="oshido>=50" src="@/assets/silver-medal.png" class="medal silver-medal medal-2">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-2">
                 <img v-if="oshido>=20" src="@/assets/bronze-medal.png" class="medal bronze-medal medal-3">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-3">
+                <img src="@/assets/home.png" class="home-icon">
                 <img src="@/assets/user.png" class="user-icon">
                 <img v-if="sideMenuActive!=true" @click="toggleList" src="@/assets/list.png" class="list-icon">
                 <img v-else @click="toggleList" src="@/assets/list-open.png" class="list-icon">
                 <img src="@/assets/footer.png" class="footer-img">
+                <div class="oshido">{{ watchedContentCount }}</div>
             </div>
         </footer>
 
@@ -73,7 +80,6 @@
             <div v-show="sideMenuActive" class="side-menu">
                 <img src="@/assets/hammburger.png" class="side-menu">
                 <table class="side-menu-content-box">
-                    <!-- {{ oshiList }} -->
                     <tr v-for="oshi in oshiList" v-bind:key="oshi.name">
                         <td class="oshi-list-name">{{ oshi.celeb_name.substring(0,10) }}</td>
                         <td class="oshi-list-oshido-label">オシ度</td>
@@ -99,15 +105,17 @@ export default {
             newName: '',
             celebInfo: '',
             celebTwInfo: '',
-            maxResults: "3",
+            maxResults: "5",
             isActive: {
                 type: [Boolean],
                 default: false
             },
             sideMenuActive: false,
             isntOshi: true,
-            oshido: 0,
-            oshiList: ''
+            oshido: '',
+            oshiList: '',
+            scrollY: 0,
+            watchedCount: 0
         };
     },
     mounted() {
@@ -115,13 +123,27 @@ export default {
         this.getTweet() // Twitterの動画取得
         this.isOshi() // ユーザーが検索された有名人を推しているか判定
         this.getOshiList() // ユーザーの推しリストを取得
+        window.addEventListener('scroll', this.onScroll)
     },
-    watch: {
-        '$route' (to) {
-            this.trigger(to.event)
+    computed: {
+        watchedContentCount: function() {
+            if(this.scrollY % 200 == 0 && this.scrollY != 0) {
+                this.addWatchedCount()
+                this.updateOshido()
+            }
+            return this.oshido
         }
     },
     methods: {
+        resetScrollY: function() {
+            this.scrollY = 0
+        },
+        addWatchedCount: function() {
+            this.oshido++
+        },
+        onScroll: function() {
+            this.scrollY = window.pageYOffset
+        },
         toggleBtn: function(i) {
             this.isActive[i] = !this.isActive[i]
         },
@@ -190,7 +212,7 @@ export default {
             })
             .then(response => {
                 console.log(response)
-                this.celebTwInfo = response.data[0].statuses;
+                this.celebTwInfo = response.data[0];
             })
             .catch(error => {
                 console.log(error.response)
@@ -256,6 +278,26 @@ export default {
                 }
             });
         },
+        addOshido: function() {
+            this.oshido++
+        },
+        updateOshido: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.put("http://localhost:5000/update_oshido", {
+                            uid: user.uid,
+                            celeb_name: this.name,
+                            oshido: this.oshido
+                    })
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
+                }
+            });
+        }
     },
 }
 </script>
@@ -480,11 +522,21 @@ export default {
     left: 65px;
     top: 30px;
     width: 75%;
-    font-size: 14px;
+    font-size: 13px;
+}
+/* ---footer--- */
+.foot-space {
+    height: 75px;
 }
 
-.foot-space{
-    height: 75px;
+.foot-box {
+    width: 341px;
+    height: 50px;
+    margin: 40px auto 0 auto;
+    font-size: 14px;
+    text-align: center;
+    background-color: rgb(63, 63, 63);
+    color: #FFFFFF;
 }
 
 .foot-nav {
@@ -503,6 +555,21 @@ export default {
     inline-size: 341px;
 }
 
+.oshido {
+    position: fixed;
+    z-index: 8;
+    width: 20px;
+    left: 0;
+    right: 2px;
+    margin: auto;
+    text-align: center;
+    top: 92%;
+    color: white;
+    font-family: Noto Sans JP;
+    font-style: normal;
+    font-weight: bold;
+}
+
 .medal {
     position: absolute;
     width: 25px;
@@ -513,36 +580,43 @@ export default {
 }
 
 .medal-1 {
-    left: 35px;
+    left: 48px;
     top: 25px;
 }
 
 .medal-2 {
-    left: 65px;
+    left: 78px;
     top: 25px;
 }
 
 .medal-3 {
-    left: 95px;
+    left: 108px;
     top: 25px;
 }
 
 .gold-medal {
-    left: 38px;
+    left: 51px;
 }
 
 .silver-medal {
-    left: 68px;
+    left: 81px;
 }
 
 .bronze-medal {
-    left: 98px;
+    left: 111px;
+}
+
+.home-icon {
+    position: absolute;
+    width: 23px;
+    left: 210px;
+    top: 25px;
 }
 
 .user-icon {
     position: absolute;
     width: 23px;
-    left: 250px;
+    left: 255px;
     top: 25px;
 }
 
@@ -553,6 +627,13 @@ export default {
     top: 25px;
 }
 
+.ranking-icon {
+    position: absolute;
+    width: 26px;
+    left: 13px;
+    top: 23px;
+}
+/* ---side menu--- */
 .side-menu {
     position: fixed;
     width: 362px;
