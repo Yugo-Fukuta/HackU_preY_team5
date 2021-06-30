@@ -49,7 +49,9 @@ docker-compose exec frontend sh
 
 #### Vueサーバーを起動
 ```
-yarn serve
+yarn local-serve # ローカル .env.local にある環境変数を読み込む
+yarn dev-serve # 開発環境 .env.development にある環境変数を読み込む
+yarn prod-serve # 本番環境 .env.production にある環境変数を読み込む
 ```
 
 #### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。コンテナ停止はdocker-compose stop
