@@ -4,3 +4,4 @@
 *.pyc
 *__pycache__/
 /backend/seed/seed_api_keys.py
+/frontend/.env.*

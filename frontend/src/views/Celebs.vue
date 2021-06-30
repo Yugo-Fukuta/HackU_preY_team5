@@ -163,7 +163,7 @@ export default {
         addOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.post("http://localhost:5000/register_oshido", {
+                    axios.post(process.env.VUE_APP_API_BASE_URL + "/register_oshido", {
                         uid: user.uid,
                         celeb_name: this.name,
                         oshido: 0
@@ -184,7 +184,7 @@ export default {
         deleteOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.delete("http://localhost:5000/delete_oshido", {
+                    axios.delete(process.env.VUE_APP_API_BASE_URL + "/delete_oshido", {
                         params: {
                             uid: user.uid,
                             celeb_name: this.name,
@@ -204,7 +204,7 @@ export default {
             });
         },
         getTweet: function() {
-            axios.get("http://localhost:5000/get_twitter_data", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_twitter_data", {
                 params: {
                     q: this.name,
                     maxResults: this.maxResults
@@ -219,7 +219,7 @@ export default {
             })
         },
         getYoutube: function() {
-            axios.get("http://localhost:5000/get_youtube_data", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_youtube_data", {
                 params: {
                     q: this.name,
                     maxResults: this.maxResults
@@ -239,7 +239,7 @@ export default {
         isOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.get("http://localhost:5000/get_oshido", {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_oshido", {
                         params: {
                             uid: user.uid,
                             celeb_name: this.name
@@ -263,7 +263,7 @@ export default {
         getOshiList: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.get("http://localhost:5000/get_oshido_list", {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_oshido_list", {
                         params: {
                             uid: user.uid,
                         }
@@ -284,7 +284,7 @@ export default {
         updateOshido: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.put("http://localhost:5000/update_oshido", {
+                    axios.put(process.env.VUE_APP_API_BASE_URL + "/update_oshido", {
                             uid: user.uid,
                             celeb_name: this.name,
                             oshido: this.oshido

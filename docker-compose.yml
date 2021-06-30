@@ -45,6 +45,7 @@ services:
       TZ: Asia/Tokyo
     ports:
       - "3000:3000"
+      - "9005:9005"
     restart: always
     #command: yarn serve (この行の#マークと、この括弧のメッセージはVueインストール後に削除してください。)
     container_name: frontend
