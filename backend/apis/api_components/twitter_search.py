@@ -73,7 +73,6 @@ class Twitter_Search_Instance:
 
             statuses[i]["text"] = statuses[i]["text"].strip()
 
-
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--q", help="Search term", default="Google")
