@@ -41,7 +41,7 @@ yarn install
 ```
 yarn local-serve # ローカル環境
 yarn dev-serve # 開発環境
-yarn prod-build # 本番環境
+yarn prod-serve # 本番環境
 ```
 
 ### Compiles and minifies for production
