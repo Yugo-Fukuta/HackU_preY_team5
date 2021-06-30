@@ -118,7 +118,7 @@ export default {
         addOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.post("http://localhost:5000/register_oshido", {
+                    axios.post(process.env.VUE_APP_API_BASE_URL + "/register_oshido", {
                         uid: user.uid,
                         celeb_name: this.name,
                         oshido: 0
@@ -138,7 +138,7 @@ export default {
         deleteOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.delete("http://localhost:5000/delete_oshido", {
+                    axios.delete(process.env.VUE_APP_API_BASE_URL + "/delete_oshido", {
                         params: {
                             uid: user.uid,
                             celeb_name: this.name,
@@ -157,7 +157,7 @@ export default {
             });
         },
         getTweet: function() {
-            axios.get("http://localhost:5000/get_twitter_data", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_twitter_data", {
                 params: {
                     q: this.name,
                     maxResults: this.params.maxResults
@@ -172,7 +172,7 @@ export default {
             })
         },
         getYoutube: function() {
-            axios.get("http://localhost:5000/get_youtube_data", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_youtube_data", {
                 params: {
                     q: this.name,
                     maxResults: this.params.maxResults
@@ -192,7 +192,7 @@ export default {
         isOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.get("http://localhost:5000/get_oshido", {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_oshido", {
                         params: {
                             uid: user.uid,
                             celeb_name: this.name
