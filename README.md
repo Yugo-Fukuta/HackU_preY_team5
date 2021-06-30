@@ -46,6 +46,9 @@ docker-compose ps
 docker-compose exec frontend sh
 ```
 
+#### frontend用のenvファイルをfrontend/ に配置
+https://github.com/Yugo-Fukuta/HackU_preY_team5_env
+ここにある3つのenvファイルをfrontend/ 直下に置いてください。
 
 #### Vueサーバーを起動
 ```
