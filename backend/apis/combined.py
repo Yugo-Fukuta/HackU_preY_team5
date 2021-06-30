@@ -6,6 +6,7 @@ from apis.twitter import get_twitter_data
 from apis.news import get_news_data
 from apis.wikipedia import get_wikipedia_prof
 from models.api_cache import APICacheModel
+from models.trend import TrendModel
 import random
 from concurrent.futures import ThreadPoolExecutor
 import datetime
@@ -14,6 +15,9 @@ import pandas.tseries.offsets as offsets
 
 def read_api_cache_row(db_session: Session, celeb_name: str):
     return db_session.query(APICacheModel).filter(APICacheModel.celeb_name == celeb_name).first()
+
+def read_trend_row(db_session: Session, celeb_name: str):
+    return db_session.query(TrendModel).filter(TrendModel.celeb_name == celeb_name).first()
 
 router = APIRouter()
 
@@ -78,6 +82,15 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
                 req.wk_cache = res_wk
             db.commit()
 
+    ret = read_trend_row(db, celeb_name)
+    if ret == None:
+        req_t = TrendModel(celeb_name=celeb_name, count=1)
+        db.add(req_t)
+        db.commit()
+    else:
+        ret.count = ret.count + 1
+        db.commit()
+
     res = []
     for y in res_yt:
         y['where']='youtube'
@@ -91,6 +104,6 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
     if res_wk != None and res_wk != {}:
         res_wk['where']='wikipedia'
 
-    res = random.sample(res, len(res))
+    res = random.sample(res, len(res))[:60]
     res.append(res_wk)
     return res
