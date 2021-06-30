@@ -10,23 +10,23 @@ class OshidoSchema(BaseModel):
     celeb_name: str
     oshido: int
 
-# そのuidのデータ一覧
+# 指定したuidのデータ一覧
 def read_uid_data(db_session: Session, uid: str):
     return db_session.query(OshidoModel).filter(OshidoModel.uid == uid).all()
 
-# そのuidの、その有名人に対する推し度
+# 指定したuidの、指定した有名人に対する推し度
 def read_oshido(db_session: Session, uid: str, celeb_name: str):
     return db_session.query(OshidoModel).filter(OshidoModel.uid == uid, OshidoModel.celeb_name==celeb_name).first()
 
 router = APIRouter()
 
-# そのuidのデータ一覧
+# 指定したuidのデータ一覧
 @router.get("/get_oshido_list/")
 def get_uid_data(uid: str, db: Session = Depends(get_db)):
     uid_data_list = read_uid_data(db, uid)
     return uid_data_list, 200
 
-# そのuidの、その有名人に対する推し度
+# 指定したuidの、指定した有名人に対する推し度
 @router.get("/get_oshido/")
 def get_oshido(uid: str, celeb_name: str, db: Session = Depends(get_db)):
     res = read_oshido(db, uid, celeb_name)
