@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from apis.oshido import router as oshido_router
 from apis.recommend import router as recommend_router
+from apis.trend import router as trend_router
 from apis.youtube import router as youtube_router
 from apis.twitter import router as twitter_router
 from apis.news import router as news_router
@@ -14,6 +15,9 @@ router.include_router(
 )
 router.include_router(
     recommend_router,
+)
+router.include_router(
+    trend_router,
 )
 router.include_router(
     youtube_router,
