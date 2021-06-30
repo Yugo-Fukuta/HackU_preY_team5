@@ -61,14 +61,14 @@ class Twitter_Search_Instance:
                 for u in urls:
                     statuses[i]["extracted_urls"].append(u["expanded_url"])
                     statuses[i]["text"] = \
-                        statuses[i]["text"].replace(f"{u['url']}\n", "")\
+                        statuses[i]["text"].replace(f"\n{u['url']}\n", "")\
                                            .replace(u["url"], "")
 
             if media:
                 for m in media:
                     statuses[i]["extracted_urls"].append(m["media_url"])
                     statuses[i]["text"] = \
-                        statuses[i]["text"].replace(f"{m['url']}\n", "")\
+                        statuses[i]["text"].replace(f"\n{m['url']}\n", "")\
                                            .replace(m["url"], "")
 
             statuses[i]["text"] = statuses[i]["text"].strip()
