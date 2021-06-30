@@ -72,9 +72,64 @@ def seed():
         {
         'where': 'oshido',
         'uid': 'uid3',
-        'celeb_name': '北島康介',
+        'celeb_name': 'マイケル・フェルプス',
         'oshido': 100,
-        },]
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid4',
+        'celeb_name': 'フワちゃん',
+        'oshido': 30,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid4',
+        'celeb_name': '指原莉乃',
+        'oshido': 60,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid4',
+        'celeb_name': '本田翼',
+        'oshido': 80,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid5',
+        'celeb_name': '本田翼',
+        'oshido': 100,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid5',
+        'celeb_name': '武井壮',
+        'oshido': 50,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid5',
+        'celeb_name': '石橋貴明',
+        'oshido': 10,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid6',
+        'celeb_name': '石橋貴明',
+        'oshido': 30,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid6',
+        'celeb_name': 'フワちゃん',
+        'oshido': 50,
+        },
+        {
+        'where': 'oshido',
+        'uid': 'uid6',
+        'celeb_name': '武井壮',
+        'oshido': 100,
+        },
+        ]
 
     for s in seedlist:
         if s['where'] == 'oshido':
