@@ -16,7 +16,9 @@ docker-compose exec frontend sh
 firebase login
 
 # Vue.jsのプロジェクトをfirebase上で動かせるようにbuild
-yarn build
+yarn local-build # ローカル
+yarn dev-build # 開発環境
+yarn prod-build # 本番環境
 
 firebase init hosting
 ? What do you want to use as your public directory? dist
@@ -37,12 +39,16 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve
+yarn local-serve # ローカル環境
+yarn dev-serve # 開発環境
+yarn prod-serve # 本番環境
 ```
 
 ### Compiles and minifies for production
 ```
-yarn build
+yarn local-build # ローカル
+yarn dev-build # 開発環境
+yarn prod-build # 本番環境
 ```
 
 ### Lints and fixes files
