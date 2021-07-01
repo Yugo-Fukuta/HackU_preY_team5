@@ -2,14 +2,14 @@
     <div class="big-container">
         <div class="page-title">Oshido Ranking</div>
         <div class="celeb-name">{{ name }}</div>
-        <div class="ranking-container">
+        <div v-for="(user,index) in oshidoRanking" v-bind:key="user.uid" class="ranking-container">
             <div class="ranking-content">
                 <div class="ranking-content-line">
-                    <div class="ranking-number">1.</div>
-                    <div class="ranking-user-name">たけし</div>
+                    <div class="ranking-number">{{ index + 1 }}.</div>
+                    <div class="ranking-user-name">{{ user.nickName }}</div>
                     <div class="ranking-oshido-box">
                         <div class="ranking-oshido-circle"></div>
-                        <div class="ranking-oshido">55</div>
+                        <div class="ranking-oshido">{{ user.oshido }}</div>
                     </div>
                 </div>
             </div>
@@ -39,12 +39,18 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     el: '#app',
     data() {
         return {
-            name: this.$route.params.celebName
+            name: this.$route.params.celebName,
+            oshidoRanking: ''
         };
+    },
+    mounted() {
+        this.getOshidoRanking()
     },
     methods: {
         pageTransition: function() {
@@ -53,6 +59,21 @@ export default {
                 params: {
                     celebName: this.name
                 }
+            })
+        },
+        getOshidoRanking: function() {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_leaderboard", {
+                params: {
+                    celeb_name: this.name,
+                    maxResults: 5
+                }
+            })
+            .then(response => {
+                console.log(response)
+                this.oshidoRanking = response.data;
+            })
+            .catch(error => {
+                console.log(error.response)
             })
         }
     }
