@@ -4,6 +4,7 @@ import Signup from '../views/Signup.vue'
 import Signin from '../views/Signin.vue'
 import Celebs from '../views/Celebs.vue'
 import Iconlist from '../views/Iconlist.vue'
+import Ranking from '../views/Ranking.vue'
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     path: '/iconlist',
     name: 'Iconlist',
     component: Iconlist
+  },
+  {
+    path: '/celebs/:celebName/ranking',
+    name: 'Ranking',
+    component: Ranking
   }
 ]
 
