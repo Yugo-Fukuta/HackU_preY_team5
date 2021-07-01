@@ -9,4 +9,3 @@ class NicknameModel(Base, TimestampMixin):
     __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, nullable=False)
     uid = Column(String(50), unique=True, nullable=False)
-    nickname = Column(String(50), unique=True, nullable=False)
