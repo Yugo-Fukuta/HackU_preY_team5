@@ -44,7 +44,7 @@ def get_celeb_tweets(q: str, maxResults: Optional[int] = 5,
                      db: Session = Depends(get_db)):
     """`q`で指定される人物のツイートを最大`maxResults`個返します。
     公式マークがついている場合のみツイートを返し、それ以外は`null`を返します。"""
-    res = Twitter_Search_Instance(read_twitter_auth_first(db))\
+    res = Twitter_Search_Instance(read_twitter_auth_first(db)) \
           .twitter_user_search(q, maxResults, include_rts, include_replies)
     return res, 200
 
