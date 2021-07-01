@@ -21,7 +21,7 @@ def read_lboard(celeb_name: str, maxResults: int, db: Session = Depends(get_db))
         if i <= maxResults - 1:
             nick = read_nickname(db, l.uid)
             if nick != None:
-                res.append({"nickName": nick.nickname, "oshido": l.oshido})
+                res.append({"nickName": 'ゲストさん' + str(nick.id), "oshido": l.oshido})
             else:
                 break
             i+=1
