@@ -40,7 +40,6 @@ def get_recommend_data(uid: str, db: Session = Depends(get_db)):
         cached_time = rec.updated_at
         current_time = datetime.datetime.utcnow()+ datetime.timedelta(hours=9)
         if pd.Timestamp(current_time.replace(microsecond = 0)) < cached_time+offsets.Hour(3):
-            print('done')
             return rec.recommend
         else:
             put_flag = True
