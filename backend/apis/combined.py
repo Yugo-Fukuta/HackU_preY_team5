@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from database import get_db, SessionLocal
 from apis.youtube import get_youtube_data, get_youtube_channel_data
 from apis.twitter import get_twitter_data
+from apis.twitter import get_celeb_tweets
 from apis.news import get_news_data
 from apis.wikipedia import get_wikipedia_prof
 from models.api_cache import APICacheModel
@@ -22,7 +23,7 @@ def read_trend_row(db_session: Session, celeb_name: str):
 router = APIRouter()
 
 @router.get("/get_combined_data/")
-def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
+def get_combined_data(celeb_name: str, maxResults: int, db: Session = Depends(get_db)):
     max_yt = 50 #youtubeのmaxResults
     max_tw = 100 #twitterのmaxResults
     res_yt = res_tw = res_nw = []
@@ -53,12 +54,13 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
 
     if (yt_put or tw_put or nw_put or wk_put) == True:
         put_flag = True
-        with ThreadPoolExecutor(max_workers=5) as executor:
+        with ThreadPoolExecutor(max_workers=6) as executor:
             if res_yt == []:
                 res_yt1 = executor.submit(get_youtube_data, celeb_name, max_yt, db).result()[0]
                 res_yt2 = executor.submit(get_youtube_channel_data, celeb_name, max_yt, db).result()[0]["videos"]
             if res_tw == []:
-                res_tw = executor.submit(get_twitter_data, celeb_name, max_tw, db).result()[0]
+                res_tw1 = executor.submit(get_twitter_data, celeb_name, max_tw, db).result()[0]
+                res_tw2 = executor.submit(get_celeb_tweets, celeb_name, max_tw, False, False, db).result()[0]
             if res_nw == []:
                 res_nw = executor.submit(get_news_data, celeb_name, db).result()[0]["articles"]
             if res_wk == {}:
@@ -66,6 +68,7 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
         
         if post_flag:
             res_yt = res_yt1 + res_yt2
+            res_tw = res_tw1 + res_tw2
             req = APICacheModel(celeb_name = celeb_name, yt_cache=res_yt, tw_cache=res_tw, nw_cache=res_nw, wk_cache=res_wk)
             db.add(req)
             db.commit()
@@ -75,6 +78,7 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
                 res_yt = res_yt1 + res_yt2
                 req.yt_cache = res_yt
             if tw_put:
+                res_tw = res_tw1 + res_tw2
                 req.tw_cache = res_tw
             if nw_put:
                 req.nw_cache = res_nw
@@ -104,6 +108,6 @@ def get_combined_data(celeb_name: str, db: Session = Depends(get_db)):
     if res_wk != None and res_wk != {}:
         res_wk['where']='wikipedia'
 
-    res = random.sample(res, len(res))[:60]
+    res = random.sample(res, len(res))[:maxResults]
     res.append(res_wk)
     return res
