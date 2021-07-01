@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-            <div v-if="index === 4" class="content-box">
+            <div v-if="index == 4 && oshiList != ''" class="content-box">
                 <div class="content-half">
                     <div class="content-line-half">
                         <div class="recommend-text">
@@ -187,15 +187,19 @@ export default {
         // this.getTweet() // Twitterの動画取得
         this.isOshi() // ユーザーが検索された有名人を推しているか判定
         this.getOshiList() // ユーザーの推しリストを取得
-        // this.getCombinedData() // ランダム化されたSNSのデータを取得
-        this.getRecommend() // 推しのレコメンド機能
+        if (this.oshiList!='') {
+            this.getRecommend() // 推しのレコメンド機能
+        }
+        this.getCombinedData() // ランダム化されたSNSのデータを取得
         window.addEventListener('scroll', this.onScroll)
     },
     computed: {
         watchedContentCount: function() {
-            if(this.scrollY % 200 == 0 && this.scrollY != 0) {
+            if (this.isntOshi==false) {
+                if (this.scrollY % 200 == 0 && this.scrollY != 0) {
                 this.addWatchedCount()
                 this.updateOshido()
+                }
             }
             return this.oshido
         }
@@ -305,7 +309,10 @@ export default {
         getCombinedData: function() {
             axios.get(process.env.VUE_APP_API_BASE_URL + "/get_combined_data", {
                 params: {
-                    celeb_name: this.name
+                    celeb_name: this.name,
+                    maxResults: 20,
+                    max_yt: 40,
+                    max_tw: 100
                 }
             })
             .then(response => {
