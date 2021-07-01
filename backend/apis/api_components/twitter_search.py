@@ -32,7 +32,7 @@ class Twitter_Search_Instance:
             auth=OAuth(self.access_token, self.access_token_secret,
                        self.api_key, self.api_key_secret)
         )
-        data = twitter.users.search(q=q, lang="ja", count=maxResults)
+        data = twitter.users.search(q=q, lang="ja", count=5)
 
         # 公式マークがないなら`None`
         if not data[0]["verified"]:
