@@ -33,66 +33,83 @@
                 </div>
         </div>
 
-        <div v-for="(data, index) in celebInfo" v-bind:key="data.where" class="content-box">
+        <div v-for="(data, index) in celebInfo" v-bind:key="data.where">
             <div v-if="data.where === 'youtube'">
-                <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
-                <img src="@/assets/youtube-icon.png" class="youtube-icon">
-                <div class="content">
-                    <iframe width="330" height="185" class="y-movie" v-bind:src="data.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
-                    <div class="content-sub-top">
-                        <div class="content-mini-box">
-                            <div class="ymovie-title">{{ data.title.substring(0,72) }}</div>
-                            <div class="ymovie-view-count">{{ data.viewCount }}回視聴</div>
-                            <div class="ymovie-publishedat">{{ data.publishedAt.substring(0,10) }}</div>
-                            <img src="@/assets/like-button.png" class="like-icon">
-                            <div class="like-count">{{ data.likeCount }}</div>
-                            <img src="@/assets/dislike-button.png" class="dislike-icon">
-                            <div class="dislike-count">{{ data.dislikeCount }}</div>
-                        </div>
+                <div class="content-box">
+                    <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
+                    <img src="@/assets/youtube-icon.png" class="youtube-icon">
+                    <div class="content">
+                        <iframe width="330" height="185" class="y-movie" v-bind:src="data.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
-                    <div class="content-sub-bottom">
-                        <div class="content-mini-box">
+                    <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                        <div class="content-sub-top">
+                            <div class="content-mini-box">
+                                <div class="ymovie-title">{{ data.title.substring(0,72) }}</div>
+                                <div class="ymovie-view-count">{{ data.viewCount }}回視聴</div>
+                                <div class="ymovie-publishedat">{{ data.publishedAt.substring(0,10) }}</div>
+                                <img src="@/assets/like-button.png" class="like-icon">
+                                <div class="like-count">{{ data.likeCount }}</div>
+                                <img src="@/assets/dislike-button.png" class="dislike-icon">
+                                <div class="dislike-count">{{ data.dislikeCount }}</div>
+                            </div>
                         </div>
+                        <div class="content-sub-bottom">
+                            <div class="content-mini-box">
+                            </div>
+                        </div>
+                        <img src="@/assets/content-banner.png" class="content-banner">
                     </div>
-                    <img src="@/assets/content-banner.png" class="content-banner">
                 </div>
             </div>
 
             <div v-else-if="data.where === 'twitter'">
-                <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
-                <img src="@/assets/twitter-icon.png" class="youtube-icon">
-                <div class="content">
-                    <div class="content-line">
-                        <img v-bind:src="data.user.profile_image_url_https" class="tw-profile-image">
-                        <div class="tw-username-box">
-                            <div class="tw-user-name">{{ data.user.name.substring(0,18) }}</div>
-                            <img v-if="data.user.verified" src="@/assets/twitter-verified-mark.png" class="tw-verified-img">
+                <div class="content-box">
+                    <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
+                    <img src="@/assets/twitter-icon.png" class="youtube-icon">
+                    <div class="content">
+                        <div class="content-line">
+                            <img v-bind:src="data.user.profile_image_url_https" class="tw-profile-image">
+                            <div class="tw-username-box">
+                                <div class="tw-user-name">{{ data.user.name.substring(0,18) }}</div>
+                                <img v-if="data.user.verified" src="@/assets/twitter-verified-mark.png" class="tw-verified-img">
+                            </div>
+                            <div class="tw-text">{{ data.text.substring(0,135) }}</div>
                         </div>
-                        <div class="tw-text">{{ data.text.substring(0,135) }}</div>
                     </div>
+                    <!-- <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                        <img src="@/assets/content-banner.png" class="content-banner">
+                    </div> -->
                 </div>
-                <!-- <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
-                    <img src="@/assets/content-banner.png" class="content-banner">
-                </div> -->
             </div>
 
             <div v-else-if="data.where === 'news'">
-                <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
-                <img src="@/assets/newspaper.png" class="news-icon">
-                <div class="content">
-                    <img v-bind:src="data.urlToImage" class="news-img">
-                    <div class="news-title-box">
-                        <div class="news-title-back"></div>
-                        <div class="news-title">{{ data.title }}</div>
+                <div class="content-box">
+                    <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
+                    <img src="@/assets/newspaper.png" class="news-icon">
+                    <div class="content">
+                        <img v-bind:src="data.urlToImage" class="news-img">
+                        <div class="news-title-box">
+                            <div class="news-title-back"></div>
+                            <div class="news-title">{{ data.title }}</div>
+                        </div>
+                    </div>
+                    <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                        <div class="news-content-box">
+                            <div class="news-content">{{ data.description.substring(0,160) }}</div>
+                        </div>
+                        <img src="@/assets/content-banner.png" class="content-banner">
                     </div>
                 </div>
-                <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
-                    <div class="news-content-box">
-                        <div class="news-content">{{ data.description.substring(0,160) }}</div>
+            </div>
+
+            <div v-if="index === 4" class="content-box">
+                <div class="content-half">
+                    <div class="content-line-half">
+                        <div class="recommend-text">
+                            あなたにおすすめの有名人
+                            <div><router-link :to="{name: 'Celebs', params: {celebName: recommendedCeleb}}">{{ recommendedCeleb }}</router-link></div>
+                        </div>
                     </div>
-                    <img src="@/assets/content-banner.png" class="content-banner">
                 </div>
             </div>
 
@@ -161,7 +178,8 @@ export default {
             oshido: '',
             oshiList: '',
             scrollY: 0,
-            watchedCount: 0
+            watchedCount: 0,
+            recommendedCeleb: ''
         };
     },
     mounted() {
@@ -170,6 +188,7 @@ export default {
         this.isOshi() // ユーザーが検索された有名人を推しているか判定
         this.getOshiList() // ユーザーの推しリストを取得
         this.getCombinedData() // ランダム化されたSNSのデータを取得
+        this.getRecommend() // 推しのレコメンド機能
         window.addEventListener('scroll', this.onScroll)
     },
     computed: {
@@ -365,6 +384,24 @@ export default {
                     })
                 }
             });
+        },
+        getRecommend: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_recommend", {
+                        params: {
+                            uid: user.uid,
+                        }
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.recommendedCeleb = response.data
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
+                }
+            });
         }
     },
 }
@@ -451,10 +488,34 @@ export default {
     z-index: 2;
 }
 
+.content-half {
+    width: 341px;
+    height: 60px;
+    margin: 0 auto 25px auto;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+
+    transition: 0.5s;
+    position: relative;
+    z-index: 2;
+}
+
 .content-line {
     position: absolute;
     width: 330px;
     height: 185px;
+    left: 2px;
+    top: 1px;
+    z-index: 3;
+    border-radius: 5px;
+    border: 3px solid #F4D153;
+}
+
+.content-line-half {
+    position: absolute;
+    width: 330px;
+    height: 51px;
     left: 2px;
     top: 1px;
     z-index: 3;
@@ -680,6 +741,10 @@ export default {
     left: 10px;
     top: -16px;
     z-index: 2;
+}
+
+.recommend-text {
+    text-align: center;
 }
 
 /* ---footer--- */
