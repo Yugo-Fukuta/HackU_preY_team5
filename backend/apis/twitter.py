@@ -1,4 +1,3 @@
-from typing import Optional
 from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session, sessionmaker
 from starlette.requests import Request
@@ -38,9 +37,9 @@ def get_twitter_data(q: str, maxResults: int, db: Session = Depends(get_db)):
     return res, 200
 
 @router.get("/get_celeb_tweets/")
-def get_celeb_tweets(q: str, maxResults: Optional[int] = 5,
-                     include_rts: Optional[bool] = False,
-                     include_replies: Optional[bool] = False,
+def get_celeb_tweets(q: str, maxResults: int = 5,
+                     include_rts: bool = False,
+                     include_replies: bool = False,
                      db: Session = Depends(get_db)):
     """`q`で指定される人物のツイートを最大`maxResults`個返します。
     公式マークがついている場合のみツイートを返し、それ以外は`null`を返します。"""

@@ -34,9 +34,9 @@ class Twitter_Search_Instance:
         )
         data = twitter.users.search(q=q, lang="ja", count=5)
 
-        # 公式マークがないなら`None`
+        # 公式マークがないなら空のリスト
         if not data[0]["verified"]:
-            return None
+            return []
 
         usrid = data[0]["id_str"]
 

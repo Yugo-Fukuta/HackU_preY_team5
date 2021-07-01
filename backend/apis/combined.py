@@ -1,4 +1,3 @@
-from typing import Optional
 from fastapi import Depends, APIRouter, Query
 from sqlalchemy.orm import Session, sessionmaker
 from database import get_db, SessionLocal
@@ -24,7 +23,7 @@ def read_trend_row(db_session: Session, celeb_name: str):
 router = APIRouter()
 
 @router.get("/get_combined_data/")
-def get_combined_data(celeb_name: str, maxResults: int, max_yt: Optional[int] = 50, max_tw: Optional[int] = 100, max_official_tw: Optional[int] = 10, db: Session = Depends(get_db)):
+def get_combined_data(celeb_name: str, maxResults: int, max_yt: int = 50, max_tw: int = 100, max_official_tw: int = 10, db: Session = Depends(get_db)):
     '''
     `maxResults`: フロント側の取得件数, `max_yt`or`max_tw`: バックエンドでのYouTube/Twitter取得件数
     '''
