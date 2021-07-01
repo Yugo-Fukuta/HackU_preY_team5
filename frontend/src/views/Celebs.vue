@@ -122,7 +122,7 @@
             </div>
             <div class="foot-space"></div>
             <div class="foot-nav">
-                <img src="@/assets/ranking.png" class="ranking-icon">
+                <img @click="pageTransition()" src="@/assets/ranking.png" class="ranking-icon">
                 <img v-if="oshido>=100" src="@/assets/gold-medal.png" class="medal gold-medal medal-1">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-1">
                 <img v-if="oshido>=50" src="@/assets/silver-medal.png" class="medal silver-medal medal-2">
@@ -187,7 +187,7 @@ export default {
         // this.getTweet() // Twitterの動画取得
         this.isOshi() // ユーザーが検索された有名人を推しているか判定
         this.getOshiList() // ユーザーの推しリストを取得
-        this.getCombinedData() // ランダム化されたSNSのデータを取得
+        // this.getCombinedData() // ランダム化されたSNSのデータを取得
         this.getRecommend() // 推しのレコメンド機能
         window.addEventListener('scroll', this.onScroll)
     },
@@ -402,6 +402,14 @@ export default {
                     })
                 }
             });
+        },
+        pageTransition: function() {
+            this.$router.push({
+                name: 'Ranking',
+                params: {
+                    celebName: this.name
+                }
+            })
         }
     },
 }
