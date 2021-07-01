@@ -7,3 +7,4 @@ from .news import NewsModel  # noqa: F401
 from .api_cache import APICacheModel  # noqa: F401
 from .recommend import RecommendModel  # noqa: F401
 from .trend import TrendModel  # noqa: F401
+from .nickname import NicknameModel # noqa: F401
