@@ -35,7 +35,7 @@ export default {
         })
     },
     registerNickname: function(uid) {
-      axios.post(process.env.VUE_APP_API_BASE_URL + "/register_nickname", {
+      axios.post(process.env.VUE_APP_API_BASE_URL + "/register_nickname/", {
           uid: uid,
       })
       .then(response => {
