@@ -25,15 +25,20 @@ class YouTube_Search_Instance:
         one_week_ago = (datetime.today() - timedelta(days=7))
         one_week_ago_iso = one_week_ago.isoformat("T") + "Z"
 
-        search_response = youtube.search().list(
-            q=q,
-            part="id,snippet",
-            maxResults=maxResults,
-            type="video",
-            publishedAfter=one_week_ago_iso,
-            safeSearch="strict",
-            regionCode="JP"
-        ).execute()
+        try:
+            search_response = youtube.search().list(
+                q=q,
+                part="id,snippet",
+                maxResults=maxResults,
+                type="video",
+                publishedAfter=one_week_ago_iso,
+                safeSearch="strict",
+                regionCode="JP"
+            ).execute()
+        except Exception as e:
+            # Catch all exception
+            print("WARN: Maybe API Quota Issue")
+            return []
 
         videos = []
         ids = []
@@ -51,10 +56,15 @@ class YouTube_Search_Instance:
                 videos.append(data)'''
                 ids.append(search_result["id"]["videoId"])
 
-        res = youtube.videos().list(
-        part='snippet,contentDetails,statistics',
-        id=','.join(ids) # カンマ区切りで複数のidを一度に渡せます
-        ).execute()
+        try:
+            res = youtube.videos().list(
+                part='snippet,contentDetails,statistics',
+                id=','.join(ids) # カンマ区切りで複数のidを一度に渡せます
+            ).execute()
+        except Exception:
+            print("WARN: Maybe API Quota Issue")
+            return []
+
 
         for vid in res["items"]:
             duration1 = isodate.parse_duration(vid['contentDetails']['duration'])
@@ -114,13 +124,17 @@ class YouTube_Search_Instance:
         youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
             developerKey=self.DEVELOPER_KEY)
 
-        search_response = youtube.search().list(
+        try:
+            search_response = youtube.search().list(
                 part="id,snippet",
                 q = q,
                 maxResults = 1, # 一番上にそれらしい人が出てくるので1に固定している
                 type = "channel",
                 regionCode = "JP",
-        ).execute()
+            ).execute()
+        except Exception:
+            print("WARN: Maybe API Quota Issue")
+            return None
 
         # ヒットしない場合もあるが、YT が生きてれば items キーはある
         if not search_response["items"]:
@@ -135,15 +149,19 @@ class YouTube_Search_Instance:
                 "description": item["snippet"]["description"]
                 }
 
-        search_response = youtube.search().list(
-            part="id,snippet",
-            maxResults=maxResults,
-            channelId = channel_data["channelId"],
-            type="video",
-            safeSearch="strict",
-            regionCode="JP",
-            order = "date",
-          ).execute()
+        try:
+            search_response = youtube.search().list(
+                part="id,snippet",
+                maxResults=maxResults,
+                channelId = channel_data["channelId"],
+                type="video",
+                safeSearch="strict",
+                regionCode="JP",
+                order = "date",
+            ).execute()
+        except Exception:
+            print("WARN: Maybe API Quota Issue")
+            return None
 
         videos = []
         ids = []
@@ -154,10 +172,14 @@ class YouTube_Search_Instance:
             if search_result["id"]["kind"] == "youtube#video":
                 ids.append(search_result["id"]["videoId"])
 
-        res = youtube.videos().list(
-        part='snippet,contentDetails,statistics',
-        id=','.join(ids) # カンマ区切りで複数のidを一度に渡せます
-        ).execute()
+        try:
+            res = youtube.videos().list(
+                part='snippet,contentDetails,statistics',
+                id=','.join(ids) # カンマ区切りで複数のidを一度に渡せます
+            ).execute()
+        except Exception:
+            print("WARN: Maybe API Quota Issue")
+            return None
 
         for vid in res["items"]:
             duration1 = isodate.parse_duration(vid['contentDetails']['duration'])
@@ -180,16 +202,16 @@ class YouTube_Search_Instance:
             except:
                 pass
             videos.append({
-            'title': vid['snippet']['title'],
-            'id': vid['id'],
-            'videoUrl': 'https://www.youtube.com/watch?v=%s' % vid['id'],
-            'thumbnailsUrl': vid["snippet"]["thumbnails"]["high"]["url"],
-            'description': vid['snippet']['description'],
-            'publishedAt': datetime.fromtimestamp(jst_time.timestamp(), jst_tz).strftime("%Y/%m/%d %H:%M"),
-            'duration': durationHMS,
-            'viewCount': int(vid['statistics']['viewCount']),
-            'likeCount': likeCount,
-            'dislikeCount': dislikeCount,
+                'title': vid['snippet']['title'],
+                'id': vid['id'],
+                'videoUrl': 'https://www.youtube.com/watch?v=%s' % vid['id'],
+                'thumbnailsUrl': vid["snippet"]["thumbnails"]["high"]["url"],
+                'description': vid['snippet']['description'],
+                'publishedAt': datetime.fromtimestamp(jst_time.timestamp(), jst_tz).strftime("%Y/%m/%d %H:%M"),
+                'duration': durationHMS,
+                'viewCount': int(vid['statistics']['viewCount']),
+                'likeCount': likeCount,
+                'dislikeCount': dislikeCount,
             })
 
         channel_data["videos"] = videos
