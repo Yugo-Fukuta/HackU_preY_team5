@@ -19,7 +19,12 @@ class Twitter_Search_Instance:
             self.api_key, self.api_key_secret))
 
         data = twitter.search.tweets(q=q, lang='ja', result_type='popular', count=maxResults)
-        tweets_data = data["statuses"]
+
+        # KeyError を防ぐ (念のため)
+        if "statuses" in data:
+            tweets_data = data["statuses"]
+        else:
+            return []
 
         # URL処理
         self._extract_urls(tweets_data)
@@ -32,7 +37,11 @@ class Twitter_Search_Instance:
             auth=OAuth(self.access_token, self.access_token_secret,
                        self.api_key, self.api_key_secret)
         )
-        data = twitter.users.search(q=q, lang="ja", count=5)
+        data = twitter.users.search(q=q, lang="ja", count=1)  # トップヒットを取る
+
+        # ヒットしない場合もある
+        if not data:
+            return []
 
         # 公式マークがないなら空のリスト
         if not data[0]["verified"]:
