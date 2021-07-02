@@ -7,6 +7,7 @@
     <p>Do you have an account? 
       <router-link to="/signin">sign in now!!</router-link>
     </p>
+    <p><router-link to="/">Back to top page</router-link></p>
   </div>
 </template>
 

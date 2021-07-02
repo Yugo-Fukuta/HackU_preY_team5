@@ -7,6 +7,7 @@
     <p>You don't have an account? 
       <router-link to="/signup">create account now!!</router-link>
     </p>
+    <p><router-link to="/">Back to top page</router-link></p>
   </div>
 </template>
 
