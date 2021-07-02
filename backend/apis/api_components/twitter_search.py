@@ -21,10 +21,7 @@ class Twitter_Search_Instance:
         data = twitter.search.tweets(q=q, lang='ja', result_type='popular', count=maxResults)
 
         # KeyError を防ぐ (念のため)
-        if "statuses" in data:
-            tweets_data = data["statuses"]
-        else:
-            return []
+        tweets_data = data.get("statuses", [])
 
         # URL処理
         self._extract_urls(tweets_data)
