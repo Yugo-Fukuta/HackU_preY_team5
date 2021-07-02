@@ -6,7 +6,6 @@
 git clone git@github.com:Yugo-Fukuta/HackU_preY_team5.git
 cd HackU_preY_team5
 
-git checkout ys
 docker-compose up -d --build
 docker-compose exec frontend sh
 ```
@@ -22,7 +21,7 @@ yarn prod-build # 本番環境
 
 firebase init hosting
 ? What do you want to use as your public directory? dist
-? Configure as a single-page app (rewrite all urls to /index.html)? No
+? Configure as a single-page app (rewrite all urls to /index.html)? Yes
 ? File dist/index.html already exists. Overwrite? No
 
 firebase deploy
