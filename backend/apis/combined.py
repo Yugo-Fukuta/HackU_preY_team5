@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 import datetime
 import pandas as pd
 import pandas.tseries.offsets as offsets
+import re
 
 def read_api_cache_row(db_session: Session, celeb_name: str):
     return db_session.query(APICacheModel).filter(APICacheModel.celeb_name == celeb_name).first()
@@ -33,6 +34,9 @@ def get_combined_data(celeb_name: str, maxResults: int, max_yt: int = 50, max_tw
     post_flag = False
     put_flag = False
     com = read_api_cache_row(db, celeb_name)
+
+    if re.sub(r"[\u3000 \t]", "", celeb_name) == '':
+        return []
 
     if com ==  None:
         post_flag = True
