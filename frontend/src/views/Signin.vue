@@ -64,5 +64,7 @@ a {
 input {
   margin: 10px 0;
   padding: 10px;
+  border: 1px solid #777;
+  border-radius: 3px;
 }
 </style>
