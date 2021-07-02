@@ -27,7 +27,7 @@ def get_combined_data(celeb_name: str, maxResults: int, max_yt: int = 50, max_tw
     '''
     `maxResults`: フロント側の取得件数, `max_yt`or`max_tw`: バックエンドでのYouTube/Twitter取得件数
     '''
-    res_yt = res_tw = res_nw = []
+    res_yt = res_yt1 = res_yt2 = res_tw =res_tw1 = res_tw2 = res_nw = []
     res_wk = {}
     yt_put = tw_put = nw_put = wk_put = True
     post_flag = False
@@ -57,16 +57,34 @@ def get_combined_data(celeb_name: str, maxResults: int, max_yt: int = 50, max_tw
         put_flag = True
         with ThreadPoolExecutor(max_workers=6) as executor:
             if res_yt == []:
-                res_yt1 = executor.submit(get_youtube_data, celeb_name, max_yt, db).result()[0]
-                res_yt2 = executor.submit(get_youtube_channel_data, celeb_name, max_yt, db).result()[0]["videos"]
+                yt1 = executor.submit(get_youtube_data, celeb_name, max_yt, db).result()[0]
+                yt2 = executor.submit(get_youtube_channel_data, celeb_name, max_yt, db).result()[0]
             if res_tw == []:
-                res_tw1 = executor.submit(get_twitter_data, celeb_name, max_tw, db).result()[0]
-                res_tw2 = executor.submit(get_celeb_tweets, celeb_name, max_official_tw, False, False, db).result()[0]
+                tw1 = executor.submit(get_twitter_data, celeb_name, max_tw, db).result()[0]
+                tw2 = executor.submit(get_celeb_tweets, celeb_name, max_official_tw, False, False, db).result()[0]
             if res_nw == []:
-                res_nw = executor.submit(get_news_data, celeb_name, db).result()[0]["articles"]
+                nw = executor.submit(get_news_data, celeb_name, db).result()[0]
             if res_wk == {}:
-                res_wk = executor.submit(get_wikipedia_prof, celeb_name, 1).result()[0]
+                wk = executor.submit(get_wikipedia_prof, celeb_name, 1).result()[0]
+
+        if yt1 != None:
+            res_yt1 = yt1
+            
+        if yt2 != None:
+            res_yt2 = yt2["videos"]
+
+        if tw1 != None:
+            res_tw1 = tw1
         
+        if tw2 != None:
+            res_tw2 = tw2
+
+        if nw != None:
+            res_nw = nw["articles"]
+        
+        if wk != None:
+            res_wk = wk
+
         if post_flag:
             res_yt = res_yt1 + res_yt2
             res_tw = res_tw1 + res_tw2
