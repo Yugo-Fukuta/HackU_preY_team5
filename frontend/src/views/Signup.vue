@@ -12,6 +12,7 @@
 
 <script>
 import firebase from 'firebase'
+import axios from 'axios'
 
 export default {
   name: 'Signup',
@@ -22,15 +23,27 @@ export default {
     }
   },
   methods: {
-    signUp: function () {
+    signUp: function() {
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-        .then(user => {
-            alert('Create account: ', user.email)
+        .then(response => {
+            alert('Create account: ', response.user.email)
+            this.registerNickname(response.user.uid)
             this.$router.push("/")
         })
         .catch(error => {
             alert(error.message)
         })
+    },
+    registerNickname: function(uid) {
+      axios.post(process.env.VUE_APP_API_BASE_URL + "/register_nickname/", {
+          uid: uid,
+      })
+      .then(response => {
+          console.log(response)
+      })
+      .catch(error => {
+          console.log(error.response.data)
+      })
     }
   }
 }
