@@ -204,6 +204,11 @@ export default {
             return this.oshido
         }
     },
+    watch: {
+      $route() {
+        this.$router.go({path: this.$router.currentRoute.path, force: true});
+      }
+    },
     methods: {
         resetScrollY: function() {
             this.scrollY = 0
