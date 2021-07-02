@@ -43,7 +43,7 @@ export default {
         },
 
         getTrend: function() {
-            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_trend", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_trend/", {
                 params: {
                     maxResults: this.maxResults
                 }
