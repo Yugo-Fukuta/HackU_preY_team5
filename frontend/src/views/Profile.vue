@@ -1,16 +1,11 @@
 <template>
     <div class="big-container">
-        <div class="page-title">Oshido Ranking</div>
-        <div class="celeb-name">{{ name }}</div>
-        <div v-for="(user,index) in oshidoRanking" v-bind:key="user.uid" class="ranking-container">
+        <div class="page-title">My Profile</div>
+        <div class="celeb-name">My Nickname:</div>
+        <div class="ranking-container">
             <div class="ranking-content">
                 <div class="ranking-content-line">
-                    <div class="ranking-number">{{ index + 1 }}.</div>
-                    <div class="ranking-user-name">{{ user.nickName }}</div>
-                    <div class="ranking-oshido-box">
-                        <div class="ranking-oshido-circle"></div>
-                        <div class="ranking-oshido">{{ user.oshido }}</div>
-                    </div>
+                    <div class="ranking-user-name">{{ nicknameInfo }}</div>
                 </div>
             </div>
         </div>
@@ -20,7 +15,7 @@
                 <div>Designed by Freepik and distributed by Flaticon</div>
             </div>
             <div class="foot-nav">
-                <img @click="pageTransition()" src="@/assets/ranking-active.png" class="ranking-icon">
+                <img src="@/assets/ranking-active.png" class="ranking-icon">
                 <img v-if="oshido>=100" src="@/assets/gold-medal.png" class="medal gold-medal medal-1">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-1">
                 <img v-if="oshido>=50" src="@/assets/silver-medal.png" class="medal silver-medal medal-2">
@@ -28,7 +23,7 @@
                 <img v-if="oshido>=20" src="@/assets/bronze-medal.png" class="medal bronze-medal medal-3">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-3">
                 <img @click="homeTransition()" src="@/assets/home.png" class="home-icon">
-                <img @click="userTransition()" src="@/assets/user.png" class="user-icon">
+                <img @click="homeTransition()" src="@/assets/user.png" class="user-icon">
                 <img v-if="sideMenuActive!=true" @click="toggleList" src="@/assets/list.png" class="list-icon">
                 <img v-else @click="toggleList" src="@/assets/list-open.png" class="list-icon">
                 <img src="@/assets/footer.png" class="footer-img">
@@ -40,52 +35,46 @@
 
 <script>
 import axios from 'axios'
+import firebase from 'firebase'
 
 export default {
     el: '#app',
     data() {
         return {
-            name: this.$route.params.celebName,
-            oshidoRanking: ''
+            uid: '',
+            nicknameInfo: ''
         };
     },
     mounted() {
-        this.getOshidoRanking()
+        this.getNickname()
     },
     methods: {
-        pageTransition: function() {
-            this.$router.push({
-                name: 'Celebs',
-                params: {
-                    celebName: this.name
-                }
-            })
-        },
         homeTransition: function() {
             this.$router.push({
                 name: 'Search',
             })
         },
-        userTransition: function() {
-            this.$router.push({
-                name: 'Profile',
-            })
-        },
-        getOshidoRanking: function() {
-            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_leaderboard/", {
-                params: {
-                    celeb_name: this.name,
-                    maxResults: 5
+        getNickname: function() {
+
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_nickname/", {
+                        params:{
+                        uid: user.uid,
+                        }
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.nicknameInfo = response.data[0]
+                    })
+                    .catch(error => {
+                        console.log(error.response.data)
+                    })
+                } else {
+                    this.$router.push('/signup')
                 }
-            })
-            .then(response => {
-                console.log(response)
-                this.oshidoRanking = response.data;
-            })
-            .catch(error => {
-                console.log(error.response)
-            })
-        }
+            });
+        },
     }
 }
 </script>
@@ -109,7 +98,7 @@ export default {
 
 .celeb-name {
     position: relative;
-    width: 120px;
+    width: 200px;
     height: 35px;
     text-align: center;
     margin: 35px auto;
@@ -154,7 +143,7 @@ export default {
 
 .ranking-user-name {
     position: absolute;
-    left: 52px;
+    left: 100px;
     top: 22px;
     font-size: 20px;
 }

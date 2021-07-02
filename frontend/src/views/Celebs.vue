@@ -15,9 +15,12 @@
             <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
                 <img src="@/assets/wikipedia-logo.png" class="wikipedia-icon">
                 <div class="content">
-                    <!-- <img v-bind:src="celebWikiInfo.thumbnail.source" class="wiki-img"> -->
+                    <div class="content-line">
+                    <div class="wiki-title">Wikipedia:</div>
+                    <!--<img v-bind:src="celebWikiInfo.thumbnail.source" class="wiki-img">-->
                     <div class="wiki-name">{{ celebWikiInfo.title }}</div>
                     <div class="wiki-discription">{{ celebWikiInfo.description }}</div>
+                    </div>
                 </div>
                 <div @click="toggleBtn(100)" v-bind:class="{active:isActive[100]}" class="content content-sub">
                     <div class="content-sub-top">
@@ -130,8 +133,8 @@
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-2">
                 <img v-if="oshido>=20" src="@/assets/bronze-medal.png" class="medal bronze-medal medal-3">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-3">
-                <img src="@/assets/home.png" class="home-icon">
-                <img src="@/assets/user.png" class="user-icon">
+                <img @click="homeTransition" src="@/assets/home.png" class="home-icon">
+                <img @click="userTransition()" src="@/assets/user.png" class="user-icon">
                 <img v-if="sideMenuActive!=true" @click="toggleList" src="@/assets/list.png" class="list-icon">
                 <img v-else @click="toggleList" src="@/assets/list-open.png" class="list-icon">
                 <img src="@/assets/footer.png" class="footer-img">
@@ -144,7 +147,7 @@
                 <img src="@/assets/hammburger.png" class="side-menu">
                 <table class="side-menu-content-box">
                     <tr v-for="oshi in oshiList" v-bind:key="oshi.name">
-                        <td class="oshi-list-name">{{ oshi.celeb_name.substring(0,10) }}</td>
+                        <td @click="searchTransition(oshi.celeb_name.substring(0,10))" class="oshi-list-name">{{ oshi.celeb_name.substring(0,10) }}</td>
                         <td class="oshi-list-oshido-label">オシ度</td>
                         <td class="oshi-list-oshido">{{ oshi.oshido }}</td>
                     </tr>
@@ -418,6 +421,24 @@ export default {
                     celebName: this.name
                 }
             })
+        },
+        searchTransition: function(oshiname) {
+            this.$router.push({
+                name: 'Celebs',
+                params: {
+                    celebName: oshiname
+                }
+            })
+        },
+        userTransition: function() {
+            this.$router.push({
+                name: 'Profile',
+            })
+        },
+        homeTransition: function() {
+            this.$router.push({
+                name: 'Search',
+            })
         }
     },
 }
@@ -471,9 +492,11 @@ export default {
     height: 30px;
     width: 70%;
     left: 20px;
-    top: 0;
+    top: 3px;
     background: #E5E5E5;
     border-radius: 5px;
+    font-size: 15px;
+    line-height: 30px;
 }
 
 
@@ -732,15 +755,23 @@ export default {
     border: 3px solid #F4D153;
 }
 
+.wiki-title {
+    width: 100px;
+    margin:5px auto;
+    font-weight: bold;
+    text-align: center;
+    font-style: italic;
+}
+
 .wiki-name {
     position: absolute;
-    left: 200px;
+    left: 10px;
     top: 30px;
 }
 
 .wiki-discription {
     position: absolute;
-    left: 200px;
+    left: 10px;
     top: 80px;
 }
 
@@ -897,6 +928,10 @@ export default {
 .oshi-list-name {
     font-size: 20px;
     line-height: 35px;
+    color: white;
+    display:inline;
+    border-bottom:1px solid #fff;
+    cursor: pointer;
 }
 
 .oshi-list-oshido-label {

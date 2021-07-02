@@ -3,7 +3,7 @@
     <h2>Sign in</h2>
     <input type="text" placeholder="Email" v-model="email">
     <input type="password" placeholder="Password" v-model="password">
-    <button @click="signIn">Signin</button>
+    <button @click="signIn">Signin !!</button>
     <p>You don't have an account? 
       <router-link to="/signup">create account now!!</router-link>
     </p>
@@ -66,5 +66,14 @@ input {
   padding: 10px;
   border: 1px solid #777;
   border-radius: 3px;
+  width: 250px;
+}
+button{
+margin-top:10px;
+font-size: 17px;
+background-color:#0af;
+border:none;
+padding: 6px 10px;
+border-radius: 3px;
 }
 </style>

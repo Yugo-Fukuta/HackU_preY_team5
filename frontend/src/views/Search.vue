@@ -114,6 +114,7 @@ body{
     left: 4%;
     background: #FFFFFF;
     border-radius: 5px;
+    font-size: 15px;
 }
 
 #trend_wrapper{
@@ -141,7 +142,7 @@ body{
 span{
     background-color: rgba(255, 255, 255, .5);
     padding: 4px;
-    cursor: default;
+    cursor: pointer;
     color: #07f;
     border: 2px solid #07f;
     border-radius: 3px;
