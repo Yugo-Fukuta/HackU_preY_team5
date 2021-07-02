@@ -62,7 +62,7 @@ export default {
             })
         },
         getOshidoRanking: function() {
-            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_leaderboard", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_leaderboard/", {
                 params: {
                     celeb_name: this.name,
                     maxResults: 5

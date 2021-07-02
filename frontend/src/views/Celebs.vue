@@ -307,7 +307,7 @@ export default {
             })
         },
         getCombinedData: function() {
-            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_combined_data", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_combined_data/", {
                 params: {
                     celeb_name: this.name,
                     maxResults: 20,
@@ -395,7 +395,7 @@ export default {
         getRecommend: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_recommend", {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_recommend/", {
                         params: {
                             uid: user.uid,
                         }
