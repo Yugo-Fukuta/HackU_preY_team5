@@ -71,22 +71,22 @@ def get_combined_data(celeb_name: str, maxResults: int, max_yt: int = 50, max_tw
             if res_wk == {}:
                 wk = executor.submit(get_wikipedia_prof, celeb_name, 1).result()[0]
 
-        if res_yt == [] and yt1 != None:
+        if res_yt == [] and isinstance(yt1, list):
             res_yt1 = yt1
-            
-        if res_yt == [] and yt2 != None:
+
+        if res_yt == [] and isinstance(yt2, dict) and "videos" in yt2:
             res_yt2 = yt2["videos"]
 
-        if res_tw == [] and tw1 != None:
+        if res_tw == [] and isinstance(tw1, list):
             res_tw1 = tw1
-        
-        if res_tw == [] and tw2 != None:
+
+        if res_tw == [] and isinstance(tw2, list):
             res_tw2 = tw2
 
-        if res_nw == [] and nw != None:
+        if res_nw == [] and isinstance(nw, dict) and "articles" in nw:
             res_nw = nw["articles"]
-        
-        if res_wk == {} and wk != None:
+
+        if res_wk == {} and isinstance(wk, dict):
             res_wk = wk
 
         if post_flag:

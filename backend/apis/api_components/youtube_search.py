@@ -28,7 +28,7 @@ class YouTube_Search_Instance:
         try:
             search_response = youtube.search().list(
                 q=q,
-                part="id,snippet",
+                part="id",
                 maxResults=maxResults,
                 type="video",
                 publishedAfter=one_week_ago_iso,
@@ -87,16 +87,16 @@ class YouTube_Search_Instance:
             except:
                 pass
             videos.append({
-            'title': vid['snippet']['title'],
-            'id': vid['id'],
-            'videoUrl': 'https://www.youtube.com/watch?v=%s' % vid['id'],
-            'thumbnailsUrl': vid["snippet"]["thumbnails"]["high"]["url"],
-            'description': vid['snippet']['description'],
-            'publishedAt': datetime.fromtimestamp(jst_time.timestamp(), jst_tz).strftime("%Y/%m/%d %H:%M"),
-            'duration': durationHMS,
-            'viewCount': int(vid['statistics']['viewCount']),
-            'likeCount': likeCount,
-            'dislikeCount': dislikeCount,
+                'title': vid['snippet']['title'],
+                'id': vid['id'],
+                'videoUrl': 'https://www.youtube.com/watch?v=%s' % vid['id'],
+                'thumbnailsUrl': vid["snippet"]["thumbnails"]["high"]["url"],
+                'description': vid['snippet']['description'],
+                'publishedAt': datetime.fromtimestamp(jst_time.timestamp(), jst_tz).strftime("%Y/%m/%d %H:%M"),
+                'duration': durationHMS,
+                'viewCount': int(vid['statistics']['viewCount']),
+                'likeCount': likeCount,
+                'dislikeCount': dislikeCount,
             })
         return videos
 
@@ -104,10 +104,14 @@ class YouTube_Search_Instance:
         youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
             developerKey=self.DEVELOPER_KEY)
 
-        search_response = youtube.videos().list(
-                part="id,statistics,status",
-                id=videoIDs
-        ).execute()
+        try:
+            search_response = youtube.videos().list(
+                    part="id,statistics,status",
+                    id=videoIDs
+            ).execute()
+        except Exception:
+            print("WARN: Maybe API Quota Issue")
+            return []
 
         items = search_response.get("items", [])
         meta_data = []
