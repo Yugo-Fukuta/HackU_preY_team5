@@ -6,12 +6,12 @@ import firebase from 'firebase'
 createApp(App).use(router).mount('#app')
 
 const config = {
-    apiKey: "AIzaSyAG5xVAyH8x5mpVnWfW3S3hDf96g79Gxw8",
-    authDomain: "hacku-team5.firebaseapp.com",
-    projectId: "hacku-team5",
-    storageBucket: "hacku-team5.appspot.com",
-    messagingSenderId: "635092656486",
-    appId: "1:635092656486:web:268a8401148a3ab014a8a7",
-    measurementId: "G-GERL1K2ZEY"
+    apiKey: "AIzaSyCfSympENN-cf5R_hbE7He231v6oK07eHs",
+    authDomain: "hacku-team5-ys.firebaseapp.com",
+    projectId: "hacku-team5-ys",
+    storageBucket: "hacku-team5-ys.appspot.com",
+    messagingSenderId: "1011613001527",
+    appId: "1:1011613001527:web:a402ee663df73204be1cb2",
+    measurementId: "G-64W9EFSXD4"
 }
 firebase.initializeApp(config);
