@@ -9,48 +9,110 @@
                 <img v-else @click="deleteOshi" src="@/assets/heart.png" class="like-button">
             </div>
         </div>
-
-        <div v-for="(movie, index) in celebInfo" v-bind:key="movie.videoUrl" class="content-box">
+        <div class="head-space"></div>
+        <!-- Wikipedia -->
+        <div v-if="isntOshi" class="content-box">
             <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
-            <img src="@/assets/youtube-icon.png" class="youtube-icon">
-            <div class="content">
-                <iframe  @click="addOshido" width="330" height="185" class="y-movie" v-bind:src="movie.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
-                <div class="content-sub-top">
-                    <div class="content-mini-box">
-                        <div class="ymovie-title">{{ movie.title.substring(0,72) }}</div>
-                        <div class="ymovie-view-count">{{ movie.viewCount }}回視聴</div>
-                        <div class="ymovie-publishedat">{{ movie.publishedAt.substring(0,10) }}</div>
-                        <img src="@/assets/like-button.png" class="like-icon">
-                        <div class="like-count">{{ movie.likeCount }}</div>
-                        <img src="@/assets/dislike-button.png" class="dislike-icon">
-                        <div class="dislike-count">{{ movie.dislikeCount }}</div>
-                    </div>
+                <img src="@/assets/wikipedia-logo.png" class="wikipedia-icon">
+                <div class="content">
+                    <!-- <img v-bind:src="celebWikiInfo.thumbnail.source" class="wiki-img"> -->
+                    <div class="wiki-name">{{ celebWikiInfo.title }}</div>
+                    <div class="wiki-discription">{{ celebWikiInfo.description }}</div>
                 </div>
-                <div class="content-sub-bottom">
-                    <div class="content-mini-box">
+                <div @click="toggleBtn(100)" v-bind:class="{active:isActive[100]}" class="content content-sub">
+                    <div class="content-sub-top">
+                        <div class="content-mini-box">
+                            <div class="wiki-content-box">{{ celebWikiInfo.extract }}</div>
+                        </div>
                     </div>
+                    <div class="content-sub-bottom">
+                        <div class="content-mini-box">
+                        </div>
+                    </div>
+                    <img src="@/assets/content-banner.png" class="content-banner">
                 </div>
-                <img src="@/assets/content-banner.png" class="content-banner">
-            </div>
         </div>
 
-        <div v-for="(tweet, index) in celebTwInfo" v-bind:key="tweet.text" class="content-box">
-            <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
-            <div class="content">
-                <div class="content-line">
-                    <img v-bind:src="tweet.user.profile_image_url_https" class="tw-profile-image">
-                    <div class="tw-username-box">
-                        <div class="tw-user-name">{{ tweet.user.name.substring(0,20) }}</div>
-                        <img v-if="tweet.user.verified" src="@/assets/twitter-verified-mark.png" class="tw-verified-img">
+        <div v-for="(data, index) in celebInfo" v-bind:key="data.where">
+            <div v-if="data.where === 'youtube'">
+                <div class="content-box">
+                    <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
+                    <img src="@/assets/youtube-icon.png" class="youtube-icon">
+                    <div class="content">
+                        <iframe width="330" height="185" class="y-movie" v-bind:src="data.videoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
-                    <div class="tw-text">{{ tweet.text }}</div>
+                    <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                        <div class="content-sub-top">
+                            <div class="content-mini-box">
+                                <div class="ymovie-title">{{ data.title.substring(0,72) }}</div>
+                                <div class="ymovie-view-count">{{ data.viewCount }}回視聴</div>
+                                <div class="ymovie-publishedat">{{ data.publishedAt.substring(0,10) }}</div>
+                                <img src="@/assets/like-button.png" class="like-icon">
+                                <div class="like-count">{{ data.likeCount }}</div>
+                                <img src="@/assets/dislike-button.png" class="dislike-icon">
+                                <div class="dislike-count">{{ data.dislikeCount }}</div>
+                            </div>
+                        </div>
+                        <div class="content-sub-bottom">
+                            <div class="content-mini-box">
+                            </div>
+                        </div>
+                        <img src="@/assets/content-banner.png" class="content-banner">
+                    </div>
                 </div>
             </div>
-            <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
-                <img src="@/assets/content-banner.png" class="content-banner">
+
+            <div v-else-if="data.where === 'twitter'">
+                <div class="content-box">
+                    <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
+                    <img src="@/assets/twitter-icon.png" class="youtube-icon">
+                    <div class="content">
+                        <div class="content-line">
+                            <img v-bind:src="data.user.profile_image_url_https" class="tw-profile-image">
+                            <div class="tw-username-box">
+                                <div class="tw-user-name">{{ data.user.name.substring(0,18) }}</div>
+                                <img v-if="data.user.verified" src="@/assets/twitter-verified-mark.png" class="tw-verified-img">
+                            </div>
+                            <div class="tw-text">{{ data.text.substring(0,135) }}</div>
+                        </div>
+                    </div>
+                    <!-- <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                        <img src="@/assets/content-banner.png" class="content-banner">
+                    </div> -->
+                </div>
             </div>
+
+            <div v-else-if="data.where === 'news'">
+                <div class="content-box">
+                    <img src="@/assets/sns-icon-banner.png" class="sns-icon-banner">
+                    <img src="@/assets/newspaper.png" class="news-icon">
+                    <div class="content">
+                        <img v-bind:src="data.urlToImage" class="news-img">
+                        <div class="news-title-box">
+                            <div class="news-title-back"></div>
+                            <div class="news-title">{{ data.title }}</div>
+                        </div>
+                    </div>
+                    <div @click="toggleBtn(index)" v-bind:class="{active:isActive[index]}" class="content content-sub">
+                        <div class="news-content-box">
+                            <div class="news-content">{{ data.description.substring(0,160) }}</div>
+                        </div>
+                        <img src="@/assets/content-banner.png" class="content-banner">
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="index == 4 && oshiList != ''" class="content-box">
+                <div class="content-half">
+                    <div class="content-line-half">
+                        <div class="recommend-text">
+                            あなたにおすすめの有名人
+                            <div><router-link :to="{name: 'Celebs', params: {celebName: recommendedCeleb}}">{{ recommendedCeleb }}</router-link></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <footer>
@@ -60,7 +122,7 @@
             </div>
             <div class="foot-space"></div>
             <div class="foot-nav">
-                <img src="@/assets/ranking.png" class="ranking-icon">
+                <img @click="pageTransition()" src="@/assets/ranking.png" class="ranking-icon">
                 <img v-if="oshido>=100" src="@/assets/gold-medal.png" class="medal gold-medal medal-1">
                 <img v-else src="@/assets/no-medal.png" class="medal no-medal medal-1">
                 <img v-if="oshido>=50" src="@/assets/silver-medal.png" class="medal silver-medal medal-2">
@@ -72,7 +134,7 @@
                 <img v-if="sideMenuActive!=true" @click="toggleList" src="@/assets/list.png" class="list-icon">
                 <img v-else @click="toggleList" src="@/assets/list-open.png" class="list-icon">
                 <img src="@/assets/footer.png" class="footer-img">
-                <div class="oshido">{{ watchedContentCount }}</div>
+                <div v-if="isOshi" class="oshido">{{ watchedContentCount }}</div>
             </div>
         </footer>
 
@@ -105,6 +167,7 @@ export default {
             newName: '',
             celebInfo: '',
             celebTwInfo: '',
+            celebWikiInfo: '',
             maxResults: "5",
             isActive: {
                 type: [Boolean],
@@ -115,21 +178,28 @@ export default {
             oshido: '',
             oshiList: '',
             scrollY: 0,
-            watchedCount: 0
+            watchedCount: 0,
+            recommendedCeleb: ''
         };
     },
     mounted() {
-        this.getYoutube() // Youtubeの動画取得
-        this.getTweet() // Twitterの動画取得
+        // this.getYoutube() // Youtubeの動画取得
+        // this.getTweet() // Twitterの動画取得
         this.isOshi() // ユーザーが検索された有名人を推しているか判定
         this.getOshiList() // ユーザーの推しリストを取得
+        if (this.oshiList!='') {
+            this.getRecommend() // 推しのレコメンド機能
+        }
+        this.getCombinedData() // ランダム化されたSNSのデータを取得
         window.addEventListener('scroll', this.onScroll)
     },
     computed: {
         watchedContentCount: function() {
-            if(this.scrollY % 200 == 0 && this.scrollY != 0) {
+            if (this.isntOshi==false) {
+                if (this.scrollY % 200 == 0 && this.scrollY != 0) {
                 this.addWatchedCount()
                 this.updateOshido()
+                }
             }
             return this.oshido
         }
@@ -236,6 +306,30 @@ export default {
                 console.log(error.response)
             })
         },
+        getCombinedData: function() {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_combined_data/", {
+                params: {
+                    celeb_name: this.name,
+                    maxResults: 20,
+                    max_yt: 40,
+                    max_tw: 100
+                }
+            })
+            .then(response => {
+                console.log(response)
+                this.celebInfo = response.data.slice(0,20)
+                this.celebInfo.forEach(element => {
+                    if (element.where == 'youtube') {
+                        element.videoUrl = "https://www.youtube.com/embed/" + element.id
+                    }
+                });
+                this.celebWikiInfo = response.data[response.data.length - 1]
+                console.log(this.celebWikiInfo)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
         isOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
@@ -297,6 +391,32 @@ export default {
                     })
                 }
             });
+        },
+        getRecommend: function() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_recommend/", {
+                        params: {
+                            uid: user.uid,
+                        }
+                    })
+                    .then(response => {
+                        console.log(response)
+                        this.recommendedCeleb = response.data
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
+                }
+            });
+        },
+        pageTransition: function() {
+            this.$router.push({
+                name: 'Ranking',
+                params: {
+                    celebName: this.name
+                }
+            })
         }
     },
 }
@@ -318,6 +438,10 @@ export default {
     background: #FFFFFF;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
+}
+
+.head-space {
+    height: 16px;
 }
 
 .search-box {
@@ -379,10 +503,34 @@ export default {
     z-index: 2;
 }
 
+.content-half {
+    width: 341px;
+    height: 60px;
+    margin: 0 auto 25px auto;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+
+    transition: 0.5s;
+    position: relative;
+    z-index: 2;
+}
+
 .content-line {
     position: absolute;
     width: 330px;
     height: 185px;
+    left: 2px;
+    top: 1px;
+    z-index: 3;
+    border-radius: 5px;
+    border: 3px solid #F4D153;
+}
+
+.content-line-half {
+    position: absolute;
+    width: 330px;
+    height: 51px;
     left: 2px;
     top: 1px;
     z-index: 3;
@@ -524,6 +672,96 @@ export default {
     width: 75%;
     font-size: 13px;
 }
+
+.news-img {
+    width: 330px;
+    height: 185px;
+    border-radius: 5px;
+    border: 3px solid #F4D153;
+}
+
+.news-title-box {
+    position: absolute;
+    width: 300px;
+    height: 80px;
+    left: 10px;
+    top: 10px;
+}
+
+.news-title-back {
+    position: relative;
+    width: 300px;
+    height: 80px;
+    background-color: black;
+    opacity: 50%;
+}
+
+.news-title {
+    position: absolute;
+    color: white;
+    left: 10px;
+    top: 10px;
+    font-weight: bold;
+}
+
+.news-content-box {
+    margin: 0 auto;
+    width: 330px;
+    padding-top: 30px;
+    word-break: break-all;
+}
+
+.news-content {
+    font-size: 14px;
+}
+
+.news-icon {
+    position: absolute;
+    width: 14px;
+    left: 10px;
+    top: -16px;
+    z-index: 2;
+}
+
+.wiki-img {
+    height: 185px;
+    object-fit: cover;
+    object-position: 50% 0;
+    border-radius: 5px;
+    border: 3px solid #F4D153;
+}
+
+.wiki-name {
+    position: absolute;
+    left: 200px;
+    top: 30px;
+}
+
+.wiki-discription {
+    position: absolute;
+    left: 200px;
+    top: 80px;
+}
+
+.wiki-content-box {
+    margin: 0 auto;
+    width: 330px;
+    padding-top: 30px;
+    font-size: 14px;
+}
+
+.wikipedia-icon {
+    position: absolute;
+    width: 16px;
+    left: 10px;
+    top: -16px;
+    z-index: 2;
+}
+
+.recommend-text {
+    text-align: center;
+}
+
 /* ---footer--- */
 .foot-space {
     height: 75px;

@@ -15,8 +15,12 @@ from models.oshido import OshidoModel
 from models.youtube import YouTubeModel
 from models.twitter import TwitterModel
 from models.news import NewsModel
+from models.nickname import NicknameModel
 
 db = SessionLocal()
+
+def read_nickname(uid: str):
+    return db.query(NicknameModel).filter(NicknameModel.uid == uid).first()
 
 def seed():
     #seedlistの内容は適宜変えてください。
@@ -144,6 +148,10 @@ def seed():
             return 400
         db.add(req)
         db.commit()
+        if s['where'] == 'oshido' and read_nickname(s['uid']) == None:
+            req2 = NicknameModel(uid=s['uid'])
+            db.add(req2)
+            db.commit()
     return 201
 
 if __name__ == '__main__':

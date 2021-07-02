@@ -122,6 +122,11 @@ class YouTube_Search_Instance:
                 regionCode = "JP",
         ).execute()
 
+        # ヒットしない場合もあるが、YT が生きてれば items キーはある
+        if not search_response["items"]:
+            # get_combined のために None を返すことにした
+            return None
+
         item = search_response["items"][0]
         channel_data = {
                 "channelId": item["snippet"]["channelId"],
