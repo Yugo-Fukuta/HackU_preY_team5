@@ -41,9 +41,20 @@ docker-compose ps
 ### Vueのインストール(参考記事)
 <https://px-wing.hatenablog.com/entry/2020/11/12/065719>
 
+#### frontendコンテナに入る
+```
+docker-compose exec frontend sh
+```
+
+#### frontend用のenvファイルをfrontend/ に配置
+https://github.com/Yugo-Fukuta/HackU_preY_team5_env
+ここにある3つのenvファイルをfrontend/ 直下に置いてください。
+
 #### Vueサーバーを起動
 ```
-docker-compose exec frontend yarn serve
+yarn local-serve # ローカル .env.local にある環境変数を読み込む
+yarn dev-serve # 開発環境 .env.development にある環境変数を読み込む
+yarn prod-serve # 本番環境 .env.production にある環境変数を読み込む
 ```
 
 #### Vueサーバー停止はCTRL+C。コンテナから出る時はexitと入力。止めずに出るならCtrl-P+Ctrl-Q。コンテナ停止はdocker-compose stop

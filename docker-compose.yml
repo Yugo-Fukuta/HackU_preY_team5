@@ -28,9 +28,9 @@ services:
       APP_ENV: "development"
       TZ: Asia/Tokyo
     ports:
-      - '5000:5000'
+      - '80:80'
     restart: always
-    command: uvicorn main:app --reload --host 0.0.0.0 --port 5000
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 80
     container_name: backend
     networks:
       - fastapi_network
@@ -45,6 +45,7 @@ services:
       TZ: Asia/Tokyo
     ports:
       - "3000:3000"
+      - "9005:9005"
     restart: always
     #command: yarn serve (この行の#マークと、この括弧のメッセージはVueインストール後に削除してください。)
     container_name: frontend
