@@ -102,12 +102,13 @@
                 </div>
             </div>
 
-            <div v-if="index == 4 && oshiList != ''" class="content-box">
+            <div v-if="index == 7 && oshiList != ''" class="content-box">
                 <div class="content-half">
                     <div class="content-line-half">
                         <div class="recommend-text">
                             あなたにおすすめの有名人
-                            <div><router-link :to="{name: 'Celebs', params: {celebName: recommendedCeleb}}">{{ recommendedCeleb }}</router-link></div>
+                            <!-- <div><router-link :to="{name: 'Celebs', params: {celebName: recommendedCeleb}}">{{ recommendedCeleb }}</router-link></div> -->
+                            <div>{{ recommendedCeleb }}</div>
                         </div>
                     </div>
                 </div>
@@ -204,11 +205,6 @@ export default {
             return this.oshido
         }
     },
-    watch: {
-      $route() {
-        this.$router.go({path: this.$router.currentRoute.path, force: true});
-      }
-    },
     methods: {
         resetScrollY: function() {
             this.scrollY = 0
@@ -238,7 +234,7 @@ export default {
         addOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.post(process.env.VUE_APP_API_BASE_URL + "/register_oshido/", {
+                    axios.post(process.env.VUE_APP_API_BASE_URL + "/register_oshido", {
                         uid: user.uid,
                         celeb_name: this.name,
                         oshido: 0
@@ -259,7 +255,7 @@ export default {
         deleteOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.delete(process.env.VUE_APP_API_BASE_URL + "/delete_oshido/", {
+                    axios.delete(process.env.VUE_APP_API_BASE_URL + "/delete_oshido", {
                         params: {
                             uid: user.uid,
                             celeb_name: this.name,
@@ -279,7 +275,7 @@ export default {
             });
         },
         getTweet: function() {
-            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_twitter_data/", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_twitter_data", {
                 params: {
                     q: this.name,
                     maxResults: this.maxResults
@@ -294,7 +290,7 @@ export default {
             })
         },
         getYoutube: function() {
-            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_youtube_data/", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_youtube_data", {
                 params: {
                     q: this.name,
                     maxResults: this.maxResults
@@ -312,7 +308,7 @@ export default {
             })
         },
         getCombinedData: function() {
-            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_combined_data/", {
+            axios.get(process.env.VUE_APP_API_BASE_URL + "/get_combined_data", {
                 params: {
                     celeb_name: this.name,
                     maxResults: 20,
@@ -338,7 +334,7 @@ export default {
         isOshi: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_oshido/", {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_oshido", {
                         params: {
                             uid: user.uid,
                             celeb_name: this.name
@@ -362,7 +358,7 @@ export default {
         getOshiList: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_oshido_list/", {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_oshido_list", {
                         params: {
                             uid: user.uid,
                         }
@@ -383,7 +379,7 @@ export default {
         updateOshido: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.put(process.env.VUE_APP_API_BASE_URL + "/update_oshido/", {
+                    axios.put(process.env.VUE_APP_API_BASE_URL + "/update_oshido", {
                             uid: user.uid,
                             celeb_name: this.name,
                             oshido: this.oshido
@@ -400,7 +396,7 @@ export default {
         getRecommend: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_recommend/", {
+                    axios.get(process.env.VUE_APP_API_BASE_URL + "/get_recommend", {
                         params: {
                             uid: user.uid,
                         }
