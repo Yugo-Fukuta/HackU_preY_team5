@@ -121,7 +121,8 @@ class YouTube_Search_Instance:
                 type = "channel",
                 regionCode = "JP",
         ).execute()
-
+        if search_response["items"] == []:
+            return []
         item = search_response["items"][0]
         channel_data = {
                 "channelId": item["snippet"]["channelId"],
