@@ -5,6 +5,7 @@ import Signin from '../views/Signin.vue'
 import Celebs from '../views/Celebs.vue'
 import Iconlist from '../views/Iconlist.vue'
 import Ranking from '../views/Ranking.vue'
+import Profile from '../views/Profile.vue'
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
     path: '/celebs/:celebName/ranking',
     name: 'Ranking',
     component: Ranking
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
   }
 ]
 

@@ -73,14 +73,19 @@ export default {
 /* .container {
     background-color: #F4D153;
 } */
+
 body{
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
-    background-color: #F4D153;
+    width: 100%;
+    height: 100%;
+    /*background-color: #F4D153;*/
 }
+
 .big-container {
     position:absolute;
     width: 100%;
+    height: 100%;
     margin: 0 auto;
     background-color: #F4D153;
     height: 100%;
@@ -114,6 +119,7 @@ body{
     left: 4%;
     background: #FFFFFF;
     border-radius: 5px;
+    font-size: 15px;
 }
 
 #trend_wrapper{
@@ -141,7 +147,7 @@ body{
 span{
     background-color: rgba(255, 255, 255, .5);
     padding: 4px;
-    cursor: default;
+    cursor: pointer;
     color: #07f;
     border: 2px solid #07f;
     border-radius: 3px;
