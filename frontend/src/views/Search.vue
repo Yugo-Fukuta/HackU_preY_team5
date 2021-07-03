@@ -77,11 +77,15 @@ export default {
 body{
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
+    width: 100%;
+    height: 100%;
     /*background-color: #F4D153;*/
 }
+
 .big-container {
     position:absolute;
     width: 100%;
+    height: 100%;
     margin: 0 auto;
     background-color: #F4D153;
     height: 100%;
