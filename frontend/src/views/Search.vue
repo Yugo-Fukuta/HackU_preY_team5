@@ -73,10 +73,11 @@ export default {
 /* .container {
     background-color: #F4D153;
 } */
+
 body{
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
-    background-color: #F4D153;
+    /*background-color: #F4D153;*/
 }
 .big-container {
     position:absolute;

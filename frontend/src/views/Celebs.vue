@@ -489,7 +489,7 @@ export default {
 .input-form {
     position: absolute;
     z-index: 5;
-    height: 30px;
+    height: 28px;
     width: 70%;
     left: 20px;
     top: 3px;
